@@ -29,7 +29,7 @@ User-Agent: Mozilla Firefox
 
 // TODO: add result
 `,
-`$ <%= config.bin %> <%= command.id %> module1/request1 -v "user: lukas" -v "repository: lmnch.github.io"
+    `$ <%= config.bin %> <%= command.id %> module1/request1 -v "user: lukas" -v "repository: lmnch.github.io"
 production
 Headers:
 Authorization: Bearer {{bearerToken}}
@@ -54,8 +54,10 @@ User-Agent: Mozilla Firefox
   ]
 
   static flags = {
-    localVariable: Flags.string({ char: 'v', description: 'Local variables to overwrite endpoint or environment variables', 
-              required: false, multiple: true }),
+    localVariable: Flags.string({
+      char: 'v', description: 'Local variables to overwrite endpoint or environment variables',
+      required: false, multiple: true
+    }),
   }
 
   static args = [
@@ -69,12 +71,14 @@ User-Agent: Mozilla Firefox
     const client = new LRestClient();
     await client.init();
 
-    const localDefinition : {[key: string]: string} = {};
+    const localDefinition: { [key: string]: string } = {};
     const { localVariable } = flags;
-    (<Array<String>>localVariable).forEach(v => {
-      const [key, value] = v.split(": ");
-      localDefinition[key] = value;
-    });
+    if (localVariable) {
+      (<Array<String>>localVariable).forEach(v => {
+        const [key, value] = v.split(": ");
+        localDefinition[key] = value;
+      });
+    }
 
     client.execute(args.requestPath, localDefinition);
   }

@@ -1,10 +1,11 @@
 LRestClient
 =================
 
-Command-line, collection-structured REST-Client.
+Command-line, json-based REST-Client written in Typescript.
 
 <!-- toc -->
 * [Usage](#usage)
+* [Definitions](#definitions)
 * [Commands](#commands)
 <!-- tocstop -->
 # Usage
@@ -13,11 +14,24 @@ Command-line, collection-structured REST-Client.
 $ npm install -g lrclient
 $ lrc COMMAND
 running command...
-$ lrc (--version)
-lrclient/0.0.0 linux-x64 node-v18.11.0
-$ lrc --help [COMMAND]
-USAGE
-  $ lrc COMMAND
+$ lrc run accounts/user/profile -v "user: lmnch"
+production
+Headers:
+Authorization: Bearer {{bearerToken}}
+User-Agent: Mozilla Firefox
+Variables:
+bearerToken=...
+baseUrl=http://www.github.com
+repository=LRClient
+requestUrl={{baseUrl}}/{{user}}/{{repository}}
+
+module1/request1
+ GET {{requestUrl}}
+
+Requesting...
+ GET http://www.github.com/lmnch/LRClient
+Authorization: Bearer ...
+User-Agent: Mozilla Firefox
 ...
 ```
 
