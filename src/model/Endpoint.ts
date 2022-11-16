@@ -14,8 +14,10 @@ export default class Endpoint {
 		this.url = url;
 		this.method = method;
 		this.resultType = resultType;
-		
 	}
 
+	toString() : string {
+		return `${this.method}: ${this.url.value}`;
+	}
 }
 

@@ -20,11 +20,11 @@ hello world! (./src/commands/hello/world.ts)
   async run(): Promise<void> {
 	  const {args, flags} = await this.parse(SetEnvironment);
 
-    console.debug("Loading config...")
+    // console.debug("Loading config...")
     const config = await loadConfig();
-    console.debug("Loaded config.")
+    // console.debug("Loaded config.")
     config.selectedEnvironment = args.environment;
-    console.debug("Storing config...")
+    // console.debug("Storing config...")
     await storeConfig(config);
     console.log("Updated config ⚙️");
 

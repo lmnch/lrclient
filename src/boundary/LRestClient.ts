@@ -8,11 +8,13 @@ import supportedParsers from "../control/SupportedResultExtractors";
 import LRCConstants from "../LRCConstants";
 import HttpMethod from "../model/HttpMethod";
 import LRCConfig from "../config/LRCConfig";
+import LRCLogger from "../control/LRCLogger";
 
 
 export default class LRestClient {
     
     config: LRCConfig = new LRCConfig();
+    logger: LRCLogger = new LRCLogger();
 
     constructor(){
     }
@@ -20,8 +22,8 @@ export default class LRestClient {
     async init(){
         this.config = await loadConfig();
 
-        console.log("Initialized LRestClient with:")
-        console.log(LRCConfig.toString(this.config));
+        // console.log("Initialized LRestClient with:")
+        // console.log(LRCConfig.toString(this.config));
     }
 
     async execute(path: string, localVariables: { [key: string]: string } = {}): Promise<any> {
@@ -30,7 +32,8 @@ export default class LRestClient {
         }
 
         const env = await loadEnvironment(this.config.selectedEnvironment);
-        console.log("Executing request in environment "+this.config.selectedEnvironment);
+        this.logger.logEnvironment(this.config.selectedEnvironment, env);
+
         const variables = env.variableScope;
 
         // Add all local passed variables:
@@ -39,6 +42,7 @@ export default class LRestClient {
         }
 
         const endpoint = await loadEndpoint(path);
+        this.logger.logEndpoint(path,endpoint);
 
         const resolvedHeaders: {[key: string]: string} = {}
         for (const key in env.headers) {
@@ -48,6 +52,12 @@ export default class LRestClient {
                 resolvedHeaders[key] = resolvedValue.value;
             }
         }
+
+        console.log("Executing endpoint:");
+        console.log(endpoint.toString());
+        console.log();
+        console.log();
+        console.log();
 
         const result = await fetch(endpoint.url.resolve(variables.variableStore).value, { method: HttpMethod[endpoint.method], 
             headers: resolvedHeaders })

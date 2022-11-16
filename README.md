@@ -1,13 +1,7 @@
-oclif-hello-world
+LRestClient
 =================
 
-oclif example Hello World CLI
-
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
-[![CircleCI](https://circleci.com/gh/oclif/hello-world/tree/main.svg?style=shield)](https://circleci.com/gh/oclif/hello-world/tree/main)
-[![Downloads/week](https://img.shields.io/npm/dw/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
-[![License](https://img.shields.io/npm/l/oclif-hello-world.svg)](https://github.com/oclif/hello-world/blob/main/package.json)
+Command-line, collection-structured REST-Client.
 
 <!-- toc -->
 * [Usage](#usage)
@@ -29,18 +23,59 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`lrc hello PERSON`](#lrc-hello-person)
+* [`lrc env`](#lrc-env)
 * [`lrc hello world`](#lrc-hello-world)
 * [`lrc help [COMMAND]`](#lrc-help-command)
-* [`lrc plugins`](#lrc-plugins)
-* [`lrc plugins:install PLUGIN...`](#lrc-pluginsinstall-plugin)
-* [`lrc plugins:inspect PLUGIN...`](#lrc-pluginsinspect-plugin)
-* [`lrc plugins:install PLUGIN...`](#lrc-pluginsinstall-plugin-1)
-* [`lrc plugins:link PLUGIN`](#lrc-pluginslink-plugin)
-* [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin)
-* [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-1)
-* [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-2)
-* [`lrc plugins update`](#lrc-plugins-update)
+
+
+## `lrc env`
+
+The LRClient can be configured by using different environments.
+An environment contains predefined headers and custom variables.
+The variables and headers can access (other) variables by using `{{variablename}}`.
+
+```
+{
+  "headers": {
+    "Authorization": "Bearer {{bearerToken}}",
+    "User-Agent": "Mozilla Firefox"
+  },
+  "variables": {
+    "bearerToken": "...",
+    "baseUrl": "http://www.github.com",
+    "user": "lmnch",
+    "repository": "LRClient",
+    "requestUrl": "{{baseUrl}}/{{user}}/{{repository}}"
+  }
+}
+```
+
+Environments should be stored in the currentdir `/env` folder.
+Currently, the environment has to be defined via JSON file.
+But, one can switch between different files with the [`lrc env set`](#lrc-env-set) command.
+
+### Sub-commands:
+
+* [`lrc env set`](#lrc-env-set)
+* [`lrc env get`](#lrc-env-set)
+
+#### `lrc env set`
+
+Changes the **currently used** environment.
+
+```
+USAGE
+  $ lrc env set production
+
+  ...
+
+  Following rest calls are going to use the environment file "./env/production.json"
+```
+
+### `lrc env get`
+
+Returns the currently used environment.
+
 
 ## `lrc hello PERSON`
 
