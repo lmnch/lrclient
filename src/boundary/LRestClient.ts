@@ -3,9 +3,11 @@
 import { loadConfig } from "../control/ConfigManager";
 import loadEndpoint from "../control/EndpointLoader";
 import { loadEnv as loadEnvironment } from "../control/EnvironmentLoader";
+import supportedResultExtractors from "../control/SupportedResultExtractors";
+import supportedParsers from "../control/SupportedResultExtractors";
 import LRCConstants from "../LRCConstants";
 import HttpMethod from "../model/HttpMethod";
-import LRCConfig from "../model/LRCConfig";
+import LRCConfig from "../config/LRCConfig";
 
 
 export default class LRestClient {
@@ -38,9 +40,24 @@ export default class LRestClient {
 
         const endpoint = await loadEndpoint(path);
 
-        const result = await fetch(endpoint.url.resolve(variables.variableStore).value, { method: HttpMethod[endpoint.method] })
+        const resolvedHeaders: {[key: string]: string} = {}
+        for (const key in env.headers) {
+            if (Object.prototype.hasOwnProperty.call(env.headers, key)) {
+                const resolvedValue = env.headers[key].resolve(variables.variableStore);
+                
+                resolvedHeaders[key] = resolvedValue.value;
+            }
+        }
 
-        console.log(result);
-        
+        const result = await fetch(endpoint.url.resolve(variables.variableStore).value, { method: HttpMethod[endpoint.method], 
+            headers: resolvedHeaders })
+
+        const resultExtractor = supportedResultExtractors[endpoint.resultType.toString()];
+
+        const extracted =  await resultExtractor.extractResult(result);
+
+        console.log(JSON.stringify(extracted));
+
+        return extracted;
     }
 }

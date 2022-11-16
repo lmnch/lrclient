@@ -1,7 +1,7 @@
 import * as fs from "fs/promises";
 import { existsSync } from "fs";
 import LRCConstants from "../LRCConstants";
-import LRCConfig from "../model/LRCConfig";
+import LRCConfig from "../config/LRCConfig";
 
 export async function loadConfig(): Promise<LRCConfig> {
     if (existsSync(LRCConstants.CONFIG_FILE)) {

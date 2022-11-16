@@ -1,8 +1,6 @@
 import Variable from "./Variable";
 
 
-
-
 export default class VariableManager {
 
 

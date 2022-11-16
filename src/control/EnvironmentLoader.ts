@@ -1,4 +1,4 @@
-import EnvironmentConfig from "../model/EnvironmentConfig";
+import EnvironmentConfig from "../config/EnvironmentConfig";
 import * as fs from 'fs/promises';
 import LRCConstants from "../LRCConstants";
 import Environment from "../model/Environment";

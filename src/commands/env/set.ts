@@ -28,7 +28,6 @@ hello world! (./src/commands/hello/world.ts)
     await storeConfig(config);
     console.log("Updated config ⚙️");
 
-    console.log(config.toString());
  }
 
 }
