@@ -1,14 +1,23 @@
 import * as fs from 'fs';
 import { Command } from '@oclif/core'
-import { loadConfig, storeConfig } from '../../control/ConfigManager';
-import { loadEnv } from '../../control/EnvironmentLoader';
+import { loadConfig, storeConfig } from '../../config/ConfigManager';
+import { loadEnv } from '../../config/EnvironmentLoader';
+import LRCLogger from '../../logging/LRCLogger';
 
 export default class GetEnvironment extends Command {
-  static description = 'Returns the name of the currently selected environment.'
+  static description = 'Returns the currently selected environment.'
 
   static examples = [
-    `<%= config.bin %> <%= command.id %>
-hello world! (./src/commands/hello/world.ts)
+    `<%= config.bin %> <%= command.id %>production
+Headers:
+Authorization: Bearer {{bearerToken}}
+User-Agent: Mozilla Firefox
+Variables:
+bearerToken=...
+baseUrl=http://www.github.com
+user=lmnch
+repository=LRClient
+requestUrl={{baseUrl}}/{{user}}/{{repository}}
 `,
   ]
 
@@ -18,20 +27,19 @@ hello world! (./src/commands/hello/world.ts)
 
   static args = []
 
-  async run(): Promise<void> {
-    const { args, flags } = await this.parse(GetEnvironment);
+  static logger = new LRCLogger();
 
+  async run(): Promise<void> {
     // console.debug("Loading config...")
     const config = await loadConfig();
     // console.debug("Loaded config.")
-    console.log(`${config.selectedEnvironment}`);
-    console.log();
     if (config.selectedEnvironment) {
       const env = await loadEnv(config.selectedEnvironment);
-      console.log(env.toString());
+      GetEnvironment.logger.logEnvironment(config.selectedEnvironment, env)
+    }else{
+      console.log(`No environment selected!`);
     }
 
-    console.log();
   }
 
 }

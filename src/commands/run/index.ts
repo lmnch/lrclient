@@ -4,16 +4,58 @@ import * as fs from 'fs';
 import LRestClient from '../../boundary/LRestClient';
 
 export default class Run extends Command {
-  static description = 'Say hello'
+  static description = 'Performs a REST call to a endpoint'
 
   static examples = [
-    `$ oex hello friend --from oclif
-hello friend from oclif! (./src/commands/hello/index.ts)
+    `$ <%= config.bin %> <%= command.id %> module1/request1 --localVariable "user: lukas"
+production
+Headers:
+Authorization: Bearer {{bearerToken}}
+User-Agent: Mozilla Firefox
+Variables:
+bearerToken=...
+baseUrl=http://www.github.com
+user=lmnch
+repository=LRClient
+requestUrl={{baseUrl}}/{{user}}/{{repository}}
+
+module1/request1
+  GET {{requestUrl}}
+
+Requesting...
+  GET http://www.github.com/lukas/LRClient
+Authorization: Bearer ...
+User-Agent: Mozilla Firefox
+
+// TODO: add result
+`,
+`$ <%= config.bin %> <%= command.id %> module1/request1 -v "user: lukas" -v "repository: lmnch.github.io"
+production
+Headers:
+Authorization: Bearer {{bearerToken}}
+User-Agent: Mozilla Firefox
+Variables:
+bearerToken=...
+baseUrl=http://www.github.com
+user=lmnch
+repository=LRClient
+requestUrl={{baseUrl}}/{{user}}/{{repository}}
+
+module1/request1
+ GET {{requestUrl}}
+
+Requesting...
+ GET http://www.github.com/lukas/lmnch.github.io
+Authorization: Bearer ...
+User-Agent: Mozilla Firefox
+
+// TODO: add result
 `,
   ]
 
   static flags = {
-    from: Flags.string({ char: 'f', description: 'Who is saying hello', required: false }),
+    localVariable: Flags.string({ char: 'v', description: 'Local variables to overwrite endpoint or environment variables', 
+              required: false, multiple: true }),
   }
 
   static args = [
@@ -27,6 +69,13 @@ hello friend from oclif! (./src/commands/hello/index.ts)
     const client = new LRestClient();
     await client.init();
 
-    client.execute(args.requestPath);
+    const localDefinition : {[key: string]: string} = {};
+    const { localVariable } = flags;
+    (<Array<String>>localVariable).forEach(v => {
+      const [key, value] = v.split(": ");
+      localDefinition[key] = value;
+    });
+
+    client.execute(args.requestPath, localDefinition);
   }
 }
