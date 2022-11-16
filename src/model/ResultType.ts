@@ -1,6 +1,6 @@
 
 enum ResultType {
-    APPLICATION_JSON = "APPLICATION_JSON"
+    APPLICATION_JSON = "application/json"
 };
 
 export default ResultType;

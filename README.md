@@ -20,19 +20,98 @@ USAGE
   $ lrc COMMAND
 ...
 ```
-<!-- usagestop -->
-# Commands
-<!-- commands -->
-* [`lrc env`](#lrc-env)
-* [`lrc hello world`](#lrc-hello-world)
-* [`lrc help [COMMAND]`](#lrc-help-command)
+
+# Definitions
+
+The files in the working folder should be structured as follows:
+```
+.config.json      <-- Configuration file which contains e.g. the current environment
+env/              <-- Folder with the enviroments
+  test.json
+  production.json <-- Configuration where headers and variables can be defined across different requests 
+collections/      <-- Contains the endpoint definitions
+  module1/        <-- There can be subfolders
+    request1.json <-- The endpoint definition
+```
+
+## Variables
+Variables can be used to parameterize your requests.
+The value of a variable can be references like this:
+```
+{{variablename}}
+```
+The value of a variable can be defined on different levels which overwrite each other in the following order (lower index overwrites higher index):
+1. Local variables: These are variables that are passed directly at the call and might be used e.g. for dynamic values which are returned by another request
+2. Endpoint variables: Defined at the endpoint which should be called
+3. Environment variables: Defined for the currently selected environment 
+
+Variable values can contain other variables (but please do not create circular dependencies):
+```
+{
+  "variables": {
+    "username": "bernd",
+    "authorization": "{{username}}:{{password}}"
+    "password": "bernd!rocks"
+  }
+}
+```
+(the variable `authorization` will be resolved to `bernd:bernd!rocks`)
+
+## Headers
+There's a similar hierarchy like for variables:
+1. Endpoint headers
+2. Environment headers
+
+Variables can be used inside of the value of a header:
+```
+{
+  "headers": {
+    "Authorization": "{{authorization}}"
+  }
+  "variables": {
+    "username": "bernd",
+    "authorization": "{{username}}:{{password}}"
+    "password": "bernd!rocks"
+  }
+}
+```
 
 
-## `lrc env`
+## Endpoint
+
+The job of a REST-Client is obvoiusly to call REST-Endpoints.
+Such an endpoint is defined as following:
+
+```
+{
+  "url": "http://localhost:8080/api/upload"
+  "method": "POST",
+  "resultType": "application/json"
+  "headers": {
+    "User-Agent": "Mozilla Firefox"
+  },
+  "variables": {
+    "user": "lmnch"
+  }
+}
+```
+
+It consists of the mandatory fields: url (of course), the HTTP method that should be used and the resultType.
+Additionally, variables and headers can be defined optionally here.
+
+
+These files should be defined in the `collections` folder.
+They endpoint that should be called is defined as the relative path the corresponding json file inside of this folder.
+
+### Result type
+
+The result time determines how the http response is handled and returned.
+TODO: improve
+
+## Environments
 
 The LRClient can be configured by using different environments.
-An environment contains predefined headers and custom variables.
-The variables and headers can access (other) variables by using `{{variablename}}`.
+An environment contains headers and custom variables which are applied to all request executed with the enviroment.
 
 ```
 {
@@ -50,16 +129,18 @@ The variables and headers can access (other) variables by using `{{variablename}
 }
 ```
 
-Environments should be stored in the currentdir `/env` folder.
+Environments should be stored in the currentdir `./env` folder.
 Currently, the environment has to be defined via JSON file.
 But, one can switch between different files with the [`lrc env set`](#lrc-env-set) command.
 
-### Sub-commands:
-
+<!-- usagestop -->
+# Commands
+<!-- commands -->
 * [`lrc env set`](#lrc-env-set)
 * [`lrc env get`](#lrc-env-set)
+* [`lrc run [ENDPOINT]`](#lrc-run-endpoint)
 
-#### `lrc env set`
+## `lrc env set`
 
 Changes the **currently used** environment.
 
@@ -72,298 +153,56 @@ USAGE
   Following rest calls are going to use the environment file "./env/production.json"
 ```
 
-### `lrc env get`
+## `lrc env get`
 
 Returns the currently used environment.
 
-
-## `lrc hello PERSON`
-
-Say hello
-
 ```
 USAGE
-  $ lrc hello [PERSON] -f <value>
-
-ARGUMENTS
-  PERSON  Person to say hello to
-
-FLAGS
-  -f, --from=<value>  (required) Who is saying hello
-
-DESCRIPTION
-  Say hello
-
-EXAMPLES
-  $ oex hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
+  $ lrc env get
+production
+Headers:
+Authorization: Bearer {{bearerToken}}
+User-Agent: Mozilla Firefox
+Variables:
+bearerToken=...
+baseUrl=http://www.github.com
+user=lmnch
+repository=LRClient
+requestUrl={{baseUrl}}/{{user}}/{{repository}}
 ```
 
-_See code: [dist/commands/hello/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.0/dist/commands/hello/index.ts)_
+## `lrc run [ENDPOINT]`
 
-## `lrc hello world`
-
-Say hello world
-
-```
-USAGE
-  $ lrc hello world
-
-DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ lrc hello world
-  hello world! (./src/commands/hello/world.ts)
-```
-
-## `lrc help [COMMAND]`
-
-Display help for lrc.
+Performs a rest call to the endpoint defined in `./collections/ENDPOINT.json`.
+Therefore, all variables are resolved (see [`Variables`](#variables)).
+Additional variables can be passed with `--localVariable "key: value"` or `-v "key: value` (can be used multiple times).
 
 ```
-USAGE
-  $ lrc help [COMMAND] [-n]
+USAGE:
+  $ lrc run module1/request1 --localVariable "user: lukas"
 
-ARGUMENTS
-  COMMAND  Command to show help for.
+production
+Headers:
+Authorization: Bearer {{bearerToken}}
+User-Agent: Mozilla Firefox
+Variables:
+bearerToken=...
+baseUrl=http://www.github.com
+user=lmnch
+repository=LRClient
+requestUrl={{baseUrl}}/{{user}}/{{repository}}
 
-FLAGS
-  -n, --nested-commands  Include all nested commands in the output.
+module1/request1
+ GET {{requestUrl}}
 
-DESCRIPTION
-  Display help for lrc.
+Requesting...
+ GET http://www.github.com/lukas/LRClient
+Authorization: Bearer ...
+User-Agent: Mozilla Firefox
+
+// TODO: Add result
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.16/src/commands/help.ts)_
 
-## `lrc plugins`
-
-List installed plugins.
-
-```
-USAGE
-  $ lrc plugins [--core]
-
-FLAGS
-  --core  Show core plugins.
-
-DESCRIPTION
-  List installed plugins.
-
-EXAMPLES
-  $ lrc plugins
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.5/src/commands/plugins/index.ts)_
-
-## `lrc plugins:install PLUGIN...`
-
-Installs a plugin into the CLI.
-
-```
-USAGE
-  $ lrc plugins:install PLUGIN...
-
-ARGUMENTS
-  PLUGIN  Plugin to install.
-
-FLAGS
-  -f, --force    Run yarn install with force flag.
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Installs a plugin into the CLI.
-  Can be installed from npm or a git url.
-
-  Installation of a user-installed plugin will override a core plugin.
-
-  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
-  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
-  the CLI without the need to patch and update the whole CLI.
-
-
-ALIASES
-  $ lrc plugins add
-
-EXAMPLES
-  $ lrc plugins:install myplugin 
-
-  $ lrc plugins:install https://github.com/someuser/someplugin
-
-  $ lrc plugins:install someuser/someplugin
-```
-
-## `lrc plugins:inspect PLUGIN...`
-
-Displays installation properties of a plugin.
-
-```
-USAGE
-  $ lrc plugins:inspect PLUGIN...
-
-ARGUMENTS
-  PLUGIN  [default: .] Plugin to inspect.
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Displays installation properties of a plugin.
-
-EXAMPLES
-  $ lrc plugins:inspect myplugin
-```
-
-## `lrc plugins:install PLUGIN...`
-
-Installs a plugin into the CLI.
-
-```
-USAGE
-  $ lrc plugins:install PLUGIN...
-
-ARGUMENTS
-  PLUGIN  Plugin to install.
-
-FLAGS
-  -f, --force    Run yarn install with force flag.
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Installs a plugin into the CLI.
-  Can be installed from npm or a git url.
-
-  Installation of a user-installed plugin will override a core plugin.
-
-  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
-  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
-  the CLI without the need to patch and update the whole CLI.
-
-
-ALIASES
-  $ lrc plugins add
-
-EXAMPLES
-  $ lrc plugins:install myplugin 
-
-  $ lrc plugins:install https://github.com/someuser/someplugin
-
-  $ lrc plugins:install someuser/someplugin
-```
-
-## `lrc plugins:link PLUGIN`
-
-Links a plugin into the CLI for development.
-
-```
-USAGE
-  $ lrc plugins:link PLUGIN
-
-ARGUMENTS
-  PATH  [default: .] path to plugin
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Links a plugin into the CLI for development.
-  Installation of a linked plugin will override a user-installed or core plugin.
-
-  e.g. If you have a user-installed or core plugin that has a 'hello' command, installing a linked plugin with a 'hello'
-  command will override the user-installed or core plugin implementation. This is useful for development work.
-
-
-EXAMPLES
-  $ lrc plugins:link myplugin
-```
-
-## `lrc plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ lrc plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ lrc plugins unlink
-  $ lrc plugins remove
-```
-
-## `lrc plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ lrc plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ lrc plugins unlink
-  $ lrc plugins remove
-```
-
-## `lrc plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ lrc plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ lrc plugins unlink
-  $ lrc plugins remove
-```
-
-## `lrc plugins update`
-
-Update installed plugins.
-
-```
-USAGE
-  $ lrc plugins update [-h] [-v]
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Update installed plugins.
-```
 <!-- commandsstop -->

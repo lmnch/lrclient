@@ -1,5 +1,5 @@
-import Variable from "../control/Variable";
-import VariableManager from "../control/VariableManager";
+import Variable from "../variables/Variable";
+import VariableManager from "../variables/VariableManager";
 import Environment from "../model/Environment";
 
 

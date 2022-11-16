@@ -1,7 +1,7 @@
 import LRCConstants from "../LRCConstants";
 import Endpoint from "../model/Endpoint";
 import * as fs from 'fs/promises';
-import EndpointConfig from "../config/EndpointConfig";
+import EndpointConfig from "./EndpointConfig";
 
 
 export default async function loadEndpoint(endpointPath:string): Promise<Endpoint>{

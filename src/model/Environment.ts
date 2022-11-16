@@ -1,11 +1,10 @@
-import Variable from "../control/Variable";
-import VariableManager from "../control/VariableManager";
+import Variable from "../variables/Variable";
+import VariableManager from "../variables/VariableManager";
 
 
 export default class Environment {
 
     headers: {[header: string]: Variable};
-
     variableScope: VariableManager;
 
     constructor(headers:{[header: string]: Variable}, vm: VariableManager){
