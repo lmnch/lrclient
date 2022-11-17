@@ -58,10 +58,14 @@ User-Agent: Mozilla Firefox
       char: 'v', description: 'Local variables to overwrite endpoint or environment variables',
       required: false, multiple: true
     }),
+    payload: Flags.string({
+      char: 'p', description: 'Payload which should be used for the request',
+      required: false, multiple: false
+    })
   }
 
   static args = [
-    { name: 'requestPath', description: "Path to request config in 'collections' directory", required: true },
+    { name: 'requestPath', description: "Path to request config in 'endpoints' directory", required: true },
     { name: 'payloadName', description: "Optional payload for the request which should be in '*requestPath*/payloads'", required: false }
   ]
 
@@ -80,6 +84,6 @@ User-Agent: Mozilla Firefox
       });
     }
 
-    client.execute(args.requestPath, localDefinition);
+    client.execute(args.requestPath, localDefinition, flags.payload);
   }
 }

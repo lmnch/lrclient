@@ -43,9 +43,11 @@ The files in the working folder should be structured as follows:
 env/              <-- Folder with the enviroments
   test.json
   production.json <-- Configuration where headers and variables can be defined across different requests 
-collections/      <-- Contains the endpoint definitions
+endpoints/        <-- Contains the endpoint definitions
   module1/        <-- There can be subfolders
     request1.json <-- The endpoint definition
+payloads/         <-- Contians definitions for selectable payloads
+  uploadData.json <-- Payload definition
 ```
 
 ## Variables
@@ -90,6 +92,24 @@ Variables can be used inside of the value of a header:
 }
 ```
 
+## Payloads
+In general, a payload can be used by creating a json file inside of the `./payloads` directory of this form:
+```
+{
+    "payloadType": "application/json",
+    "data": "{\"street\":\"Teststreet\",\"name\": \"{{user}}\"}"
+}
+```
+Inside of this data field, variables can be resolved.
+Currently, there are three types of payloads supported:
+* JSON: `data` contains the whole JSON string
+* Text: `data` contains the whole text
+* Files: `data` contains the path to the file that should be uploaded
+
+The payload which should be used for a request can be defined on two levels (similar to variables):
+1. "Locally": Directly at the call via parameter
+2. Endpoint: Default payload for the endpoint
+Keep in mind that only payloads defined in the `./payloads` dir can be used!
 
 ## Endpoint
 
@@ -114,7 +134,7 @@ It consists of the mandatory fields: url (of course), the HTTP method that shoul
 Additionally, variables and headers can be defined optionally here.
 
 
-These files should be defined in the `collections` folder.
+These files should be defined in the `endpoints` folder.
 They endpoint that should be called is defined as the relative path the corresponding json file inside of this folder.
 
 ### Result type
@@ -188,7 +208,7 @@ requestUrl={{baseUrl}}/{{user}}/{{repository}}
 
 ## `lrc run [ENDPOINT]`
 
-Performs a rest call to the endpoint defined in `./collections/ENDPOINT.json`.
+Performs a rest call to the endpoint defined in `./endpoints/ENDPOINT.json`.
 Therefore, all variables are resolved (see [`Variables`](#variables)).
 Additional variables can be passed with `--localVariable "key: value"` or `-v "key: value` (can be used multiple times).
 
