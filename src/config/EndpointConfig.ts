@@ -1,16 +1,19 @@
 import Variable from "../variables/Variable";
 import Endpoint from "../model/Endpoint";
 import HttpMethod from "../model/HttpMethod";
-import ResultType from "../model/ResultType";
+import PayloadType from "../model/PayloadType";
 import VariableManager from "../variables/VariableManager";
+import { loadPayload } from "./PayloadLoader";
 
 export default class EndpointConfig {
     url: string = "";
     method: keyof typeof HttpMethod = "GET";
-    resultType: keyof typeof ResultType = "APPLICATION_JSON";
+    accept: keyof typeof PayloadType = "APPLICATION_JSON";
 
     headers: { [name: string]: string } = {};
     variables: { [key: string]: string } = {};
+
+    payload: string | undefined;
 
     static _mapHeaders(headers: { [name: string]: string }): { [key: string]: Variable } {
         const mapped: { [key: string]: Variable } = {};
@@ -24,9 +27,13 @@ export default class EndpointConfig {
         return mapped;
     }
 
-    static toEndpoint(ec: EndpointConfig): Endpoint {
+    static async toEndpoint(ec: EndpointConfig): Promise<Endpoint> {
         const method = ec.method ? HttpMethod[ec.method] : HttpMethod.GET;
-        const resultType = ec.resultType ? ResultType[ec.resultType] : ResultType.APPLICATION_JSON;
-        return new Endpoint(new Variable("url", ec.url), method, resultType, EndpointConfig._mapHeaders(ec.headers), new VariableManager(ec.variables));
+        const accept = ec.accept ? PayloadType[ec.accept] : PayloadType.APPLICATION_JSON;
+        let payload = undefined;
+        if(ec.payload){
+            payload = await loadPayload(ec.payload);
+        }
+        return new Endpoint(new Variable("url", ec.url), method, accept, EndpointConfig._mapHeaders(ec.headers), new VariableManager(ec.variables), payload);
     }
 }
