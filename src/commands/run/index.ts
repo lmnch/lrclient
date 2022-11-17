@@ -65,8 +65,7 @@ User-Agent: Mozilla Firefox
   }
 
   static args = [
-    { name: 'requestPath', description: "Path to request config in 'endpoints' directory", required: true },
-    { name: 'payloadName', description: "Optional payload for the request which should be in '*requestPath*/payloads'", required: false }
+    { name: 'requestPath', description: "Path to request config in 'endpoints' directory", required: true }
   ]
 
   async run(): Promise<void> {
