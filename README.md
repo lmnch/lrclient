@@ -3,13 +3,11 @@ LRestClient
 
 Command-line, json-based REST-Client written in Typescript.
 
-<!-- toc -->
 * [Usage](#usage)
 * [Definitions](#definitions)
 * [Commands](#commands)
-<!-- tocstop -->
+
 # Usage
-<!-- usage -->
 ```sh-session
 $ npm install -g lrclient
 $ lrc COMMAND
@@ -167,12 +165,11 @@ Environments should be stored in the currentdir `./env` folder.
 Currently, the environment has to be defined via JSON file.
 But, one can switch between different files with the [`lrc env set`](#lrc-env-set) command.
 
-<!-- usagestop -->
 # Commands
-<!-- commands -->
+
 * [`lrc env set`](#lrc-env-set)
 * [`lrc env get`](#lrc-env-set)
-* [`lrc run [ENDPOINT]`](#lrc-run-endpoint)
+* [`lrc run ENDPOINT`](#lrc-run-endpoint)
 
 ## `lrc env set`
 
@@ -206,7 +203,7 @@ repository=LRClient
 requestUrl={{baseUrl}}/{{user}}/{{repository}}
 ```
 
-## `lrc run [ENDPOINT]`
+## `lrc run ENDPOINT`
 
 Performs a rest call to the endpoint defined in `./endpoints/ENDPOINT.json`.
 Therefore, all variables are resolved (see [`Variables`](#variables)).
@@ -238,5 +235,382 @@ User-Agent: Mozilla Firefox
 // TODO: Add result
 ```
 
+# All commands (generated)
+<!-- commands -->
+* [`lrc env get`](#lrc-env-get)
+* [`lrc env set ENVIRONMENT`](#lrc-env-set-environment)
+* [`lrc help [COMMAND]`](#lrc-help-command)
+* [`lrc plugins`](#lrc-plugins)
+* [`lrc plugins:install PLUGIN...`](#lrc-pluginsinstall-plugin)
+* [`lrc plugins:inspect PLUGIN...`](#lrc-pluginsinspect-plugin)
+* [`lrc plugins:install PLUGIN...`](#lrc-pluginsinstall-plugin-1)
+* [`lrc plugins:link PLUGIN`](#lrc-pluginslink-plugin)
+* [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin)
+* [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-1)
+* [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-2)
+* [`lrc plugins update`](#lrc-plugins-update)
+* [`lrc run REQUESTPATH`](#lrc-run-requestpath)
 
+## `lrc env get`
+
+Returns the currently selected environment.
+
+```
+USAGE
+  $ lrc env get
+
+DESCRIPTION
+  Returns the currently selected environment.
+
+EXAMPLES
+  $ lrc env getproduction
+  Headers:
+  Authorization: Bearer {{bearerToken}}
+  User-Agent: Mozilla Firefox
+  Variables:
+  bearerToken=...
+  baseUrl=http://www.github.com
+  user=lmnch
+  repository=LRClient
+  requestUrl={{baseUrl}}/{{user}}/{{repository}}
+```
+
+## `lrc env set ENVIRONMENT`
+
+Updates the current working environtment
+
+```
+USAGE
+  $ lrc env set [ENVIRONMENT]
+
+ARGUMENTS
+  ENVIRONMENT  Name of the environment file in 'environments' directory.
+
+DESCRIPTION
+  Updates the current working environtment
+
+EXAMPLES
+  $ lrc env set
+  production
+  Headers:
+  Authorization: Bearer {{bearerToken}}
+  User-Agent: Mozilla Firefox
+  Variables:
+  bearerToken=...
+  baseUrl=http://www.github.com
+  user=lmnch
+  repository=LRClient
+  requestUrl={{baseUrl}}/{{user}}/{{repository}}
+  Updated config ⚙️
+```
+
+## `lrc help [COMMAND]`
+
+Display help for lrc.
+
+```
+USAGE
+  $ lrc help [COMMAND] [-n]
+
+ARGUMENTS
+  COMMAND  Command to show help for.
+
+FLAGS
+  -n, --nested-commands  Include all nested commands in the output.
+
+DESCRIPTION
+  Display help for lrc.
+```
+
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.19/src/commands/help.ts)_
+
+## `lrc plugins`
+
+List installed plugins.
+
+```
+USAGE
+  $ lrc plugins [--core]
+
+FLAGS
+  --core  Show core plugins.
+
+DESCRIPTION
+  List installed plugins.
+
+EXAMPLES
+  $ lrc plugins
+```
+
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.7/src/commands/plugins/index.ts)_
+
+## `lrc plugins:install PLUGIN...`
+
+Installs a plugin into the CLI.
+
+```
+USAGE
+  $ lrc plugins:install PLUGIN...
+
+ARGUMENTS
+  PLUGIN  Plugin to install.
+
+FLAGS
+  -f, --force    Run yarn install with force flag.
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Installs a plugin into the CLI.
+  Can be installed from npm or a git url.
+
+  Installation of a user-installed plugin will override a core plugin.
+
+  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
+  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
+  the CLI without the need to patch and update the whole CLI.
+
+
+ALIASES
+  $ lrc plugins add
+
+EXAMPLES
+  $ lrc plugins:install myplugin 
+
+  $ lrc plugins:install https://github.com/someuser/someplugin
+
+  $ lrc plugins:install someuser/someplugin
+```
+
+## `lrc plugins:inspect PLUGIN...`
+
+Displays installation properties of a plugin.
+
+```
+USAGE
+  $ lrc plugins:inspect PLUGIN...
+
+ARGUMENTS
+  PLUGIN  [default: .] Plugin to inspect.
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Displays installation properties of a plugin.
+
+EXAMPLES
+  $ lrc plugins:inspect myplugin
+```
+
+## `lrc plugins:install PLUGIN...`
+
+Installs a plugin into the CLI.
+
+```
+USAGE
+  $ lrc plugins:install PLUGIN...
+
+ARGUMENTS
+  PLUGIN  Plugin to install.
+
+FLAGS
+  -f, --force    Run yarn install with force flag.
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Installs a plugin into the CLI.
+  Can be installed from npm or a git url.
+
+  Installation of a user-installed plugin will override a core plugin.
+
+  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
+  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
+  the CLI without the need to patch and update the whole CLI.
+
+
+ALIASES
+  $ lrc plugins add
+
+EXAMPLES
+  $ lrc plugins:install myplugin 
+
+  $ lrc plugins:install https://github.com/someuser/someplugin
+
+  $ lrc plugins:install someuser/someplugin
+```
+
+## `lrc plugins:link PLUGIN`
+
+Links a plugin into the CLI for development.
+
+```
+USAGE
+  $ lrc plugins:link PLUGIN
+
+ARGUMENTS
+  PATH  [default: .] path to plugin
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Links a plugin into the CLI for development.
+  Installation of a linked plugin will override a user-installed or core plugin.
+
+  e.g. If you have a user-installed or core plugin that has a 'hello' command, installing a linked plugin with a 'hello'
+  command will override the user-installed or core plugin implementation. This is useful for development work.
+
+
+EXAMPLES
+  $ lrc plugins:link myplugin
+```
+
+## `lrc plugins:uninstall PLUGIN...`
+
+Removes a plugin from the CLI.
+
+```
+USAGE
+  $ lrc plugins:uninstall PLUGIN...
+
+ARGUMENTS
+  PLUGIN  plugin to uninstall
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Removes a plugin from the CLI.
+
+ALIASES
+  $ lrc plugins unlink
+  $ lrc plugins remove
+```
+
+## `lrc plugins:uninstall PLUGIN...`
+
+Removes a plugin from the CLI.
+
+```
+USAGE
+  $ lrc plugins:uninstall PLUGIN...
+
+ARGUMENTS
+  PLUGIN  plugin to uninstall
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Removes a plugin from the CLI.
+
+ALIASES
+  $ lrc plugins unlink
+  $ lrc plugins remove
+```
+
+## `lrc plugins:uninstall PLUGIN...`
+
+Removes a plugin from the CLI.
+
+```
+USAGE
+  $ lrc plugins:uninstall PLUGIN...
+
+ARGUMENTS
+  PLUGIN  plugin to uninstall
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Removes a plugin from the CLI.
+
+ALIASES
+  $ lrc plugins unlink
+  $ lrc plugins remove
+```
+
+## `lrc plugins update`
+
+Update installed plugins.
+
+```
+USAGE
+  $ lrc plugins update [-h] [-v]
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Update installed plugins.
+```
+
+## `lrc run REQUESTPATH`
+
+Performs a REST call to a endpoint
+
+```
+USAGE
+  $ lrc run [REQUESTPATH] [-v <value>] [-p <value>]
+
+ARGUMENTS
+  REQUESTPATH  Path to request config in 'endpoints' directory
+
+FLAGS
+  -p, --payload=<value>           Payload which should be used for the request
+  -v, --localVariable=<value>...  Local variables to overwrite endpoint or environment variables
+
+DESCRIPTION
+  Performs a REST call to a endpoint
+
+EXAMPLES
+  $ lrc run module1/request1 --localVariable "user: lukas"
+  production
+  Headers:
+  Authorization: Bearer {{bearerToken}}
+  User-Agent: Mozilla Firefox
+  Variables:
+  bearerToken=...
+  baseUrl=http://www.github.com
+  user=lmnch
+  repository=LRClient
+  requestUrl={{baseUrl}}/{{user}}/{{repository}}
+  module1/request1
+    GET {{requestUrl}}
+  Requesting...
+    GET http://www.github.com/lukas/LRClient
+  Authorization: Bearer ...
+  User-Agent: Mozilla Firefox
+  // TODO: add result
+
+  $ lrc run module1/request1 -v "user: lukas" -v "repository: lmnch.github.io"
+  production
+  Headers:
+  Authorization: Bearer {{bearerToken}}
+  User-Agent: Mozilla Firefox
+  Variables:
+  bearerToken=...
+  baseUrl=http://www.github.com
+  user=lmnch
+  repository=LRClient
+  requestUrl={{baseUrl}}/{{user}}/{{repository}}
+  module1/request1
+   GET {{requestUrl}}
+  Requesting...
+   GET http://www.github.com/lukas/lmnch.github.io
+  Authorization: Bearer ...
+  User-Agent: Mozilla Firefox
+  // TODO: add result
+```
+
+_See code: [dist/commands/run/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.2/dist/commands/run/index.ts)_
 <!-- commandsstop -->
