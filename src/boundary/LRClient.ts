@@ -12,13 +12,14 @@ import Variable from "../variables/Variable";
 import VariableMerger from "../variables/VariableMerger";
 import Payload from "../payload/Payload";
 import { loadPayload } from "../config/PayloadLoader";
+import PayloadText from "../payload/PayloadText";
 
 /**
  * LRClient which executes the requests based on the passed config parameters.
  */
 export default class LRClient {
 
-    configManager =  new ConfigManager();
+    configManager = new ConfigManager();
     config: LRCConfig = new LRCConfig();
     logger: LRCLogger = new LRCLogger();
 
@@ -71,11 +72,16 @@ export default class LRClient {
         const resolvedUrl = endpoint.url.resolve(variables.variableStore).value;
 
         // Now, choose the correct payload
-        let chosenPayload : Payload | undefined = undefined;
+        let chosenPayload: Payload | undefined = undefined;
         if (payload) {
             chosenPayload = await loadPayload(payload);
         } else if (endpoint.payload) {
             chosenPayload = endpoint.payload;
+        }
+
+        // Add content type header for payload
+        if (chosenPayload) {
+            resolvedHeaders["Content-Type"] = chosenPayload.getContentTypeHeader();
         }
 
         const body = await chosenPayload?.getBody(variables.variableStore);
@@ -87,7 +93,14 @@ export default class LRClient {
         })
 
         const resultExtractor = supportedResultExtractors[endpoint.resultType];
-        const extracted = await resultExtractor.extractResult(result);
+        let extracted: Payload;
+        try {
+            extracted = await resultExtractor.extractResult(result);
+        } catch (e) {
+            extracted = new PayloadText("Error extracting the result!");
+            this.logger.logError((await extracted.getBody({}))?.toString(), <Error>e);
+            this.logger.nl();
+        }
 
         // Map headers back
         const responseHeaders: { [key: string]: string } = {};

@@ -51,7 +51,7 @@ export default class LRCLogger {
         }
     }
 
-    logResponse(status: number, statusText: string, headers: { [key: string]: string }, payload: Payload) {
+    logResponse(status: number, statusText: string, headers: { [key: string]: string }, payload: Payload|string) {
         logger.bold().underscore().color("white").log("Response:");
 
         logger.bgColor(status < 300 ? "green" : status > 400 && status < 500 ? "red" : status >= 500 ? "magenta" : "white").color("black").log(status).joint().color("white").log(" "+ statusText);
@@ -65,6 +65,11 @@ export default class LRCLogger {
         }
     }
 
+    logError(message: string|undefined, e: Error){
+        logger.bgColor("red").log("!!!").joint().bgColor("yellow").color("black").log(message);
+        logger.log(e);
+    }
+    
     nl() {
         logger.log();
     }

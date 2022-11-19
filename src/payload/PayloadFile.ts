@@ -30,4 +30,7 @@ export default class PayloadFile implements Payload {
         return `[FILE] ${this.path}`;
     }
 
+    getContentTypeHeader(): string {
+        return "application/octet-stream";
+    }
 }

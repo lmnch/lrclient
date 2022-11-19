@@ -16,4 +16,8 @@ export default class PayloadJson implements Payload {
     toString(): string {
         return JSON.stringify(this.data);
     }
+
+    getContentTypeHeader(): string {
+        return "application/json";
+    }
 }
