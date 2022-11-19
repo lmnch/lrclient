@@ -27,7 +27,7 @@ export default class Execute extends Command {
 
         const script = (await fs.readFile(args.script)).toString();
         // Wrap inside of method to support await keyword
-        const code = `const executionLrcMethod = async (lrc) => { ${script} };\nexecutionLrcMethod(lrc);`
+        const code = `const executionLrcMethod = async (lrc, log) => { ${script} };\nexecutionLrcMethod(lrc, log);`
         const context = { lrc: client, log: (...args: any[]) => { logger.color("green").log(...args); } };
         vm.createContext(context);
         vm.runInContext(code, context);
