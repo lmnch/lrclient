@@ -289,6 +289,7 @@ The `LRCLogger` (`src/logging/LRCLogger`) is used to print the model classes to 
 <!-- commands -->
 * [`lrc env get`](#lrc-env-get)
 * [`lrc env set ENVIRONMENT`](#lrc-env-set-environment)
+* [`lrc exec SCRIPT`](#lrc-exec-script)
 * [`lrc help [COMMAND]`](#lrc-help-command)
 * [`lrc plugins`](#lrc-plugins)
 * [`lrc plugins:install PLUGIN...`](#lrc-pluginsinstall-plugin)
@@ -299,6 +300,7 @@ The `LRCLogger` (`src/logging/LRCLogger`) is used to print the model classes to 
 * [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-1)
 * [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-2)
 * [`lrc plugins update`](#lrc-plugins-update)
+* [`lrc script execute SCRIPT`](#lrc-script-execute-script)
 * [`lrc send REQUESTPATH`](#lrc-send-requestpath)
 
 ## `lrc env get`
@@ -353,6 +355,28 @@ EXAMPLES
   repository=LRClient
   requestUrl={{baseUrl}}/{{user}}/{{repository}}
   Updated config ⚙️
+```
+
+## `lrc exec SCRIPT`
+
+Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be used).Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
+
+```
+USAGE
+  $ lrc exec [SCRIPT]
+
+ARGUMENTS
+  SCRIPT  Path to script that should be executed
+
+DESCRIPTION
+  Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be
+  used).Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
+
+ALIASES
+  $ lrc exec
+
+EXAMPLES
+  $ lrc exec ./scripts/testscript.js
 ```
 
 ## `lrc help [COMMAND]`
@@ -605,6 +629,28 @@ DESCRIPTION
   Update installed plugins.
 ```
 
+## `lrc script execute SCRIPT`
+
+Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be used).Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
+
+```
+USAGE
+  $ lrc script execute [SCRIPT]
+
+ARGUMENTS
+  SCRIPT  Path to script that should be executed
+
+DESCRIPTION
+  Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be
+  used).Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
+
+ALIASES
+  $ lrc exec
+
+EXAMPLES
+  $ lrc script execute ./scripts/testscript.js
+```
+
 ## `lrc send REQUESTPATH`
 
 Performs a REST call to a endpoint
@@ -695,5 +741,5 @@ EXAMPLES
     <p>The requested URL <code>/lmnch/LRClient</code> was not found on this server.  <ins>That’s all we know.</ins>
 ```
 
-_See code: [dist/commands/send/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.4/dist/commands/send/index.ts)_
+_See code: [dist/commands/send/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.5/dist/commands/send/index.ts)_
 <!-- commandsstop -->
