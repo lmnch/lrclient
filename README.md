@@ -6,14 +6,16 @@ Command-line, json-based REST-Client written in Typescript.
 * [Usage](#usage)
 * [Definitions](#definitions)
 * [Commands](#commands)
+* [Project Structure](#project-structure)
+* [All commands (generated)](#all-commands-generated)
 
 # Usage
 ```sh-session
 $ npm install -g lrclient
 $ lrc COMMAND
 running command...
-$ lrc run accounts/user/profile -v "user: lmnch"
-production
+$ lrc send ./endpoints/accounts/user/profile.json -v "user: lmnch"
+./env/production.json
 Headers:
 Authorization: Bearer {{bearerToken}}
 User-Agent: Mozilla Firefox
@@ -23,7 +25,7 @@ baseUrl=http://www.github.com
 repository=LRClient
 requestUrl={{baseUrl}}/{{user}}/{{repository}}
 
-module1/request1
+./endpoints/accounts/user/profile.json
  GET {{requestUrl}}
 
 Requesting...
@@ -95,7 +97,7 @@ The payload which should be used for a request can be defined on two levels (sim
 1. "Locally": Directly at the call via parameter
 2. Endpoint: Default payload for the endpoint
 
-The payload can be selected by refering it in the run command call [`lrc run ENDPOINT`](#lrc-run-endpoint).
+The payload can be selected by refering it in the send command call [`lrc send ENDPOINT`](#lrc-send-endpoint).
 
 ## Endpoint
 
@@ -120,7 +122,7 @@ It consists of the mandatory fields: url (of course), the HTTP method that shoul
 Additionally, variables and headers can be defined optionally here.
 It is also possible to overwrite/supplement the headers and variables defined in the environment.
 
-The endpoint file that should be used can be selected by its path when using the [run command](#lrc-run-endpoint).
+The endpoint file that should be used can be selected by its path when using the [send command](#lrc-send-endpoint).
 
 ### Result type
 
@@ -154,7 +156,7 @@ But, one can switch between different files with the [`lrc env set`](#lrc-env-se
 
 * [`lrc env set`](#lrc-env-set)
 * [`lrc env get`](#lrc-env-set)
-* [`lrc run ENDPOINT`](#lrc-run-endpoint)
+* [`lrc send ENDPOINT`](#lrc-send-endpoint)
 
 ## `lrc env set`
 
@@ -188,7 +190,7 @@ repository=LRClient
 requestUrl={{baseUrl}}/{{user}}/{{repository}}
 ```
 
-## `lrc run ENDPOINT`
+## `lrc send ENDPOINT`
 
 Performs a rest call to the endpoint defined in the `ENDPOINT` file.
 Therefore, all variables are resolved (see [`Variables`](#variables)).
@@ -196,7 +198,7 @@ Additional variables can be passed with `--localVariable "key: value"` or `-v "k
 
 ```
 USAGE:
-  $ lrc run ./module1/request1.json --localVariable "user: lukas"
+  $ lrc send ./module1/request1.json --localVariable "user: lukas"
 
 production
 Headers:
@@ -220,6 +222,20 @@ User-Agent: Mozilla Firefox
 // TODO: Add result
 ```
 
+# Project structure
+
+The project uses [The Open CLI Framework](https://oclif.io/) to provide the REST client as cli tool.
+The source files for the commands are stored in `src/commands`.
+The commands call the configuration and REST client functionality by using the classes in the `src/boundary` directory.
+
+It contains the `LRClient` which performs the REST calls and the `ConfigManager` which allows to load and change the configuration.
+`src/model` contains the data classes that define how the requests are performed. 
+This contains some enums (`HttpMethod`, `PayloadType`) and classes that contain the definition (`Environment`, `Endpoint`).
+Further, theres a special directory `payload` for different payload types.
+They use classes from the `src/variables` directory which manage the variables and variable replacement.
+
+The `LRCLogger` (`src/logging/LRCLogger`) is used to print the model classes to the console in a colorful way.
+
 # All commands (generated)
 <!-- commands -->
 * [`lrc env get`](#lrc-env-get)
@@ -234,7 +250,7 @@ User-Agent: Mozilla Firefox
 * [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-1)
 * [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-2)
 * [`lrc plugins update`](#lrc-plugins-update)
-* [`lrc run REQUESTPATH`](#lrc-run-requestpath)
+* [`lrc send REQUESTPATH`](#lrc-send-requestpath)
 
 ## `lrc env get`
 
@@ -540,13 +556,13 @@ DESCRIPTION
   Update installed plugins.
 ```
 
-## `lrc run REQUESTPATH`
+## `lrc send REQUESTPATH`
 
 Performs a REST call to a endpoint
 
 ```
 USAGE
-  $ lrc run [REQUESTPATH] [-v <value>] [-p <value>]
+  $ lrc send [REQUESTPATH] [-v <value>] [-p <value>]
 
 ARGUMENTS
   REQUESTPATH  Path to the endpoint defintion json file that should be called
@@ -559,7 +575,7 @@ DESCRIPTION
   Performs a REST call to a endpoint
 
 EXAMPLES
-  $ lrc run endpoints/examplerequest.json --localVariable "user: lukas"
+  $ lrc send endpoints/examplerequest.json --localVariable "user: lukas"
   ./env/test.json
   Headers:
   Authorization: Bearer {{bearerToken}}
@@ -594,7 +610,7 @@ EXAMPLES
     <p><b>404.</b> <ins>That’s an error.</ins>
     <p>The requested URL <code>/lukas/LRClient</code> was not found on this server.  <ins>That’s all we know.</ins>
 
-  $ lrc run endpoints/examplerequest.json
+  $ lrc send endpoints/examplerequest.json
   ./env/test.json
   Headers:
   Authorization: Bearer {{bearerToken}}
@@ -630,5 +646,5 @@ EXAMPLES
     <p>The requested URL <code>/lmnch/LRClient</code> was not found on this server.  <ins>That’s all we know.</ins>
 ```
 
-_See code: [dist/commands/run/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.3/dist/commands/run/index.ts)_
+_See code: [dist/commands/send/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.4/dist/commands/send/index.ts)_
 <!-- commandsstop -->

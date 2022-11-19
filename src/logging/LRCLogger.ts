@@ -4,7 +4,6 @@ import Environment from "../model/Environment";
 import HttpMethod from "../model/HttpMethod";
 import Payload from "../payload/Payload";
 
-
 export default class LRCLogger {
 
     logEnvironment(environmentKey: string, e: Environment) {

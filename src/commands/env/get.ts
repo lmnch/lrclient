@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { Command } from '@oclif/core'
-import { loadConfig, storeConfig } from '../../config/ConfigManager';
+import ConfigManager from '../../boundary/ConfigManager';
 import { loadEnv } from '../../config/EnvironmentLoader';
 import LRCLogger from '../../logging/LRCLogger';
 
@@ -27,10 +27,11 @@ requestUrl={{baseUrl}}/{{user}}/{{repository}}
   static args = []
 
   static logger = new LRCLogger();
+  static configManager = new ConfigManager();
 
   async run(): Promise<void> {
     // console.debug("Loading config...")
-    const config = await loadConfig();
+    const config = await GetEnvironment.configManager.loadConfig();
     // console.debug("Loaded config.")
     if (config.selectedEnvironment) {
       const env = await loadEnv(config.selectedEnvironment);

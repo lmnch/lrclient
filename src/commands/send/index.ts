@@ -1,9 +1,9 @@
 import { Command, Flags } from '@oclif/core'
 import * as fetch from 'node-fetch';
 import * as fs from 'fs';
-import LRClient from '../../boundary/LRestClient';
+import LRClient from '../../boundary/LRClient';
 
-export default class Run extends Command {
+export default class Send extends Command {
   static description = 'Performs a REST call to a endpoint'
 
   static examples = [
@@ -100,7 +100,7 @@ referrer-policy: no-referrer
   ]
 
   async run(): Promise<void> {
-    const { args, flags } = await this.parse(Run);
+    const { args, flags } = await this.parse(Send);
 
     const client = new LRClient();
     await client.init();
@@ -114,6 +114,6 @@ referrer-policy: no-referrer
       });
     }
 
-    client.execute(args.requestPath, localDefinition, flags.payload);
+    client.send(args.requestPath, localDefinition, flags.payload);
   }
 }

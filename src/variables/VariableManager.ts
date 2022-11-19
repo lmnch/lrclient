@@ -1,8 +1,10 @@
 import Variable from "./Variable";
 
 
+/**
+ * Contains a variable map and converts a map<string, string> to a map<string, variable>
+ */
 export default class VariableManager {
-
 
 	variableStore: { [key: string]: Variable };
 
@@ -16,13 +18,6 @@ export default class VariableManager {
 
 	put(key: string, value: string){
 		this.variableStore[key] = new Variable(key, value);
-	}	
-
-	getResolvedVariableValue(key: string): string {
-		if (!this.variableStore[key]) {
-			throw new Error("Variable " + key + " not found in scope!");
-		}
-		return this.variableStore[key].resolve(this.variableStore).value;
 	}
 
 }

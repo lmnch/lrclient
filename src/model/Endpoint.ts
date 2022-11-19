@@ -5,6 +5,9 @@ import HttpMethod from "./HttpMethod";
 import PayloadType from "./PayloadType";
 
 
+/**
+ * Endpoint definition
+ */
 export default class Endpoint {
 
 	url: Variable;

@@ -1,10 +1,10 @@
 
 
+/**
+ * Endpoint- and environment independent configuration for the REST client
+ */
 export default class LRCConfig {
 
     selectedEnvironment: string | null = null;
 
-    static toString(c : LRCConfig): string {
-        return `LRCConfig ⚙️\n🌲 Selected Environment: ${c.selectedEnvironment}`;
-    }
 }
