@@ -29,7 +29,7 @@ export default class LRClient {
         // console.log(LRCConfig.toString(this.config));
     }
 
-    async execute(path: string, localVariables: { [key: string]: string } = {}, payload: string | undefined = undefined): Promise<any> {
+    async send(path: string, localVariables: { [key: string]: string } = {}, payload: string | undefined = undefined): Promise<any> {
         if (this.config.selectedEnvironment == null) {
             throw new Error("No environment selected!");
         }

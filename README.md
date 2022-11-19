@@ -12,8 +12,8 @@ Command-line, json-based REST-Client written in Typescript.
 $ npm install -g lrclient
 $ lrc COMMAND
 running command...
-$ lrc run accounts/user/profile -v "user: lmnch"
-production
+$ lrc send ./endpoints/accounts/user/profile.json -v "user: lmnch"
+./env/production.json
 Headers:
 Authorization: Bearer {{bearerToken}}
 User-Agent: Mozilla Firefox
@@ -23,7 +23,7 @@ baseUrl=http://www.github.com
 repository=LRClient
 requestUrl={{baseUrl}}/{{user}}/{{repository}}
 
-module1/request1
+./endpoints/accounts/user/profile.json
  GET {{requestUrl}}
 
 Requesting...
@@ -95,7 +95,7 @@ The payload which should be used for a request can be defined on two levels (sim
 1. "Locally": Directly at the call via parameter
 2. Endpoint: Default payload for the endpoint
 
-The payload can be selected by refering it in the run command call [`lrc run ENDPOINT`](#lrc-run-endpoint).
+The payload can be selected by refering it in the send command call [`lrc send ENDPOINT`](#lrc-send-endpoint).
 
 ## Endpoint
 
@@ -120,7 +120,7 @@ It consists of the mandatory fields: url (of course), the HTTP method that shoul
 Additionally, variables and headers can be defined optionally here.
 It is also possible to overwrite/supplement the headers and variables defined in the environment.
 
-The endpoint file that should be used can be selected by its path when using the [run command](#lrc-run-endpoint).
+The endpoint file that should be used can be selected by its path when using the [send command](#lrc-send-endpoint).
 
 ### Result type
 
@@ -188,7 +188,7 @@ repository=LRClient
 requestUrl={{baseUrl}}/{{user}}/{{repository}}
 ```
 
-## `lrc run ENDPOINT`
+## `lrc send ENDPOINT`
 
 Performs a rest call to the endpoint defined in the `ENDPOINT` file.
 Therefore, all variables are resolved (see [`Variables`](#variables)).
@@ -196,7 +196,7 @@ Additional variables can be passed with `--localVariable "key: value"` or `-v "k
 
 ```
 USAGE:
-  $ lrc run ./module1/request1.json --localVariable "user: lukas"
+  $ lrc send ./module1/request1.json --localVariable "user: lukas"
 
 production
 Headers:
@@ -234,7 +234,7 @@ User-Agent: Mozilla Firefox
 * [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-1)
 * [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-2)
 * [`lrc plugins update`](#lrc-plugins-update)
-* [`lrc run REQUESTPATH`](#lrc-run-requestpath)
+* [`lrc send REQUESTPATH`](#lrc-run-requestpath)
 
 ## `lrc env get`
 
@@ -540,13 +540,13 @@ DESCRIPTION
   Update installed plugins.
 ```
 
-## `lrc run REQUESTPATH`
+## `lrc send REQUESTPATH`
 
 Performs a REST call to a endpoint
 
 ```
 USAGE
-  $ lrc run [REQUESTPATH] [-v <value>] [-p <value>]
+  $ lrc send [REQUESTPATH] [-v <value>] [-p <value>]
 
 ARGUMENTS
   REQUESTPATH  Path to the endpoint defintion json file that should be called
@@ -559,7 +559,7 @@ DESCRIPTION
   Performs a REST call to a endpoint
 
 EXAMPLES
-  $ lrc run endpoints/examplerequest.json --localVariable "user: lukas"
+  $ lrc send endpoints/examplerequest.json --localVariable "user: lukas"
   ./env/test.json
   Headers:
   Authorization: Bearer {{bearerToken}}
@@ -594,7 +594,7 @@ EXAMPLES
     <p><b>404.</b> <ins>That’s an error.</ins>
     <p>The requested URL <code>/lukas/LRClient</code> was not found on this server.  <ins>That’s all we know.</ins>
 
-  $ lrc run endpoints/examplerequest.json
+  $ lrc send endpoints/examplerequest.json
   ./env/test.json
   Headers:
   Authorization: Bearer {{bearerToken}}
@@ -630,5 +630,5 @@ EXAMPLES
     <p>The requested URL <code>/lmnch/LRClient</code> was not found on this server.  <ins>That’s all we know.</ins>
 ```
 
-_See code: [dist/commands/run/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.3/dist/commands/run/index.ts)_
+_See code: [dist/commands/send/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.3/dist/commands/send/index.ts)_
 <!-- commandsstop -->
