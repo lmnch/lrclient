@@ -284,6 +284,7 @@ The `LRCLogger` (`src/logging/LRCLogger`) is used to print the model classes to 
 
 # All commands (generated)
 <!-- commands -->
+* [`lrc BaseCommand`](#lrc-basecommand)
 * [`lrc env get`](#lrc-env-get)
 * [`lrc env set ENVIRONMENT`](#lrc-env-set-environment)
 * [`lrc exec SCRIPT`](#lrc-exec-script)
@@ -299,6 +300,18 @@ The `LRCLogger` (`src/logging/LRCLogger`) is used to print the model classes to 
 * [`lrc plugins update`](#lrc-plugins-update)
 * [`lrc script execute SCRIPT`](#lrc-script-execute-script)
 * [`lrc send REQUESTPATH`](#lrc-send-requestpath)
+
+## `lrc BaseCommand`
+
+```
+USAGE
+  $ lrc BaseCommand [--loggedFields env|endpoint|endpoint_payload|req|req_body|resp|resp_body]
+
+GLOBAL FLAGS
+  --loggedFields=(env|endpoint|endpoint_payload|req|req_body|resp|resp_body)...  Specify level for logging.
+```
+
+_See code: [dist/commands/BaseCommand.ts](https://github.com/lmnch/LRClient/blob/v0.0.6/dist/commands/BaseCommand.ts)_
 
 ## `lrc env get`
 
@@ -356,18 +369,21 @@ EXAMPLES
 
 ## `lrc exec SCRIPT`
 
-Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be used).Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
+Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be used). Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
 
 ```
 USAGE
-  $ lrc exec [SCRIPT]
+  $ lrc exec [SCRIPT] [--loggedFields env|endpoint|endpoint_payload|req|req_body|resp|resp_body]
 
 ARGUMENTS
   SCRIPT  Path to script that should be executed
 
+GLOBAL FLAGS
+  --loggedFields=(env|endpoint|endpoint_payload|req|req_body|resp|resp_body)...  Specify level for logging.
+
 DESCRIPTION
   Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be
-  used).Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
+  used). Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
 
 ALIASES
   $ lrc exec
@@ -628,18 +644,21 @@ DESCRIPTION
 
 ## `lrc script execute SCRIPT`
 
-Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be used).Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
+Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be used). Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
 
 ```
 USAGE
-  $ lrc script execute [SCRIPT]
+  $ lrc script execute [SCRIPT] [--loggedFields env|endpoint|endpoint_payload|req|req_body|resp|resp_body]
 
 ARGUMENTS
   SCRIPT  Path to script that should be executed
 
+GLOBAL FLAGS
+  --loggedFields=(env|endpoint|endpoint_payload|req|req_body|resp|resp_body)...  Specify level for logging.
+
 DESCRIPTION
   Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be
-  used).Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
+  used). Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
 
 ALIASES
   $ lrc exec
@@ -654,7 +673,8 @@ Performs a REST call to a endpoint
 
 ```
 USAGE
-  $ lrc send [REQUESTPATH] [-v <value>] [-p <value>]
+  $ lrc send [REQUESTPATH] [--loggedFields env|endpoint|endpoint_payload|req|req_body|resp|resp_body] [-v
+    <value>] [-p <value>]
 
 ARGUMENTS
   REQUESTPATH  Path to the endpoint defintion json file that should be called
@@ -663,23 +683,14 @@ FLAGS
   -p, --payload=<value>           Path to the payload which should be used for the request
   -v, --localVariable=<value>...  Local variables to overwrite endpoint or environment variables
 
+GLOBAL FLAGS
+  --loggedFields=(env|endpoint|endpoint_payload|req|req_body|resp|resp_body)...  Specify level for logging.
+
 DESCRIPTION
   Performs a REST call to a endpoint
 
 EXAMPLES
   $ lrc send endpoints/examplerequest.json --localVariable "user: lukas"
-  ./env/test.json
-  Headers:
-  Authorization: Bearer {{bearerToken}}
-  User-Agent: Mozilla Firefox
-  Variables:
-  bearerToken=...
-  baseUrl=http://www.google.com
-  user=lmnch
-  repository=LRClient
-  requestUrl={{baseUrl}}/{{user}}/{{repository}}
-  endpoints/examplerequest.json
-  POST {{requestUrl}}
   Requesting...
   POST http://www.google.com/lukas/LRClient
   Authorization: Bearer ...
@@ -692,29 +703,9 @@ EXAMPLES
   referrer-policy: no-referrer
   <!DOCTYPE html>
   <html lang=en>
-    <meta charset=utf-8>
-    <meta name=viewport content="initial-scale=1, minimum-scale=1, width=device-width">
-    <title>Error 404 (Not Found)!!1</title>
-    <style>
-      *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* > body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right:205px}p{margin:11px 0 22px;overflow:hidden}ins{color:#777;text-decoration:none}a img{border:0}@media screen and (max-width:772px){body{background:none;margin-top:0;max-width:none;padding-right:0}}#logo{background:url(//www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png) no-repeat;margin-left:-5px}@media only screen and (min-resolution:192dpi){#logo{background:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) no-repeat 0% 0%/100% 100%;-moz-border-image:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) 0}}@media only screen and (-webkit-min-device-pixel-ratio:2){#logo{background:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) no-repeat;-webkit-background-size:100% 100%}}#logo{display:inline-block;height:54px;width:150px}
-    </style>
-    <a href=//www.google.com/><span id=logo aria-label=Google></span></a>
-    <p><b>404.</b> <ins>That’s an error.</ins>
-    <p>The requested URL <code>/lukas/LRClient</code> was not found on this server.  <ins>That’s all we know.</ins>
+      ...
 
   $ lrc send endpoints/examplerequest.json
-  ./env/test.json
-  Headers:
-  Authorization: Bearer {{bearerToken}}
-  User-Agent: Mozilla Firefox
-  Variables:
-  bearerToken=...
-  baseUrl=http://www.google.com
-  user=lmnch
-  repository=LRClient
-  requestUrl={{baseUrl}}/{{user}}/{{repository}}
-  ./endpoints/examplerequest.json
-  POST {{requestUrl}}
   Requesting...
   POST http://www.google.com/lmnch/LRClient
   Authorization: Bearer ...
@@ -727,16 +718,8 @@ EXAMPLES
   referrer-policy: no-referrer
   <!DOCTYPE html>
   <html lang=en>
-    <meta charset=utf-8>
-    <meta name=viewport content="initial-scale=1, minimum-scale=1, width=device-width">
-    <title>Error 404 (Not Found)!!1</title>
-    <style>
-      *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* > body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right:205px}p{margin:11px 0 22px;overflow:hidden}ins{color:#777;text-decoration:none}a img{border:0}@media screen and (max-width:772px){body{background:none;margin-top:0;max-width:none;padding-right:0}}#logo{background:url(//www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png) no-repeat;margin-left:-5px}@media only screen and (min-resolution:192dpi){#logo{background:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) no-repeat 0% 0%/100% 100%;-moz-border-image:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) 0}}@media only screen and (-webkit-min-device-pixel-ratio:2){#logo{background:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) no-repeat;-webkit-background-size:100% 100%}}#logo{display:inline-block;height:54px;width:150px}
-    </style>
-    <a href=//www.google.com/><span id=logo aria-label=Google></span></a>
-    <p><b>404.</b> <ins>That’s an error.</ins>
-    <p>The requested URL <code>/lmnch/LRClient</code> was not found on this server.  <ins>That’s all we know.</ins>
+  ...
 ```
 
-_See code: [dist/commands/send/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.5/dist/commands/send/index.ts)_
+_See code: [dist/commands/send/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.6/dist/commands/send/index.ts)_
 <!-- commandsstop -->
