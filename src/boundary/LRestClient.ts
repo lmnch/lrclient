@@ -14,7 +14,7 @@ import Payload from "../payload/Payload";
 import { loadPayload } from "../config/PayloadLoader";
 
 
-export default class LRestClient {
+export default class LRClient {
 
     config: LRCConfig = new LRCConfig();
     logger: LRCLogger = new LRCLogger();

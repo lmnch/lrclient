@@ -35,19 +35,6 @@ User-Agent: Mozilla Firefox
 
 # Definitions
 
-The files in the working folder should be structured as follows:
-```
-.config.json      <-- Configuration file which contains e.g. the current environment
-env/              <-- Folder with the enviroments
-  test.json
-  production.json <-- Configuration where headers and variables can be defined across different requests 
-endpoints/        <-- Contains the endpoint definitions
-  module1/        <-- There can be subfolders
-    request1.json <-- The endpoint definition
-payloads/         <-- Contians definitions for selectable payloads
-  uploadData.json <-- Payload definition
-```
-
 ## Variables
 Variables can be used to parameterize your requests.
 The value of a variable can be references like this:
@@ -91,7 +78,7 @@ Variables can be used inside of the value of a header:
 ```
 
 ## Payloads
-In general, a payload can be used by creating a json file inside of the `./payloads` directory of this form:
+A payload can be used by creating a json file of this form:
 ```
 {
     "payloadType": "application/json",
@@ -107,7 +94,8 @@ Currently, there are three types of payloads supported:
 The payload which should be used for a request can be defined on two levels (similar to variables):
 1. "Locally": Directly at the call via parameter
 2. Endpoint: Default payload for the endpoint
-Keep in mind that only payloads defined in the `./payloads` dir can be used!
+
+The payload can be selected by refering it in the run command call [`lrc run ENDPOINT`](#lrc-run-endpoint).
 
 ## Endpoint
 
@@ -130,10 +118,9 @@ Such an endpoint is defined as following:
 
 It consists of the mandatory fields: url (of course), the HTTP method that should be used and the resultType.
 Additionally, variables and headers can be defined optionally here.
+It is also possible to overwrite/supplement the headers and variables defined in the environment.
 
-
-These files should be defined in the `endpoints` folder.
-They endpoint that should be called is defined as the relative path the corresponding json file inside of this folder.
+The endpoint file that should be used can be selected by its path when using the [run command](#lrc-run-endpoint).
 
 ### Result type
 
@@ -160,9 +147,7 @@ An environment contains headers and custom variables which are applied to all re
   }
 }
 ```
-
-Environments should be stored in the currentdir `./env` folder.
-Currently, the environment has to be defined via JSON file.
+Currently, the environment has to be defined directly in a JSON file.
 But, one can switch between different files with the [`lrc env set`](#lrc-env-set) command.
 
 # Commands
@@ -177,7 +162,7 @@ Changes the **currently used** environment.
 
 ```
 USAGE
-  $ lrc env set production
+  $ lrc env set ./env/production.json
 
   ...
 
@@ -191,7 +176,7 @@ Returns the currently used environment.
 ```
 USAGE
   $ lrc env get
-production
+./env/production.json
 Headers:
 Authorization: Bearer {{bearerToken}}
 User-Agent: Mozilla Firefox
@@ -205,13 +190,13 @@ requestUrl={{baseUrl}}/{{user}}/{{repository}}
 
 ## `lrc run ENDPOINT`
 
-Performs a rest call to the endpoint defined in `./endpoints/ENDPOINT.json`.
+Performs a rest call to the endpoint defined in the `ENDPOINT` file.
 Therefore, all variables are resolved (see [`Variables`](#variables)).
 Additional variables can be passed with `--localVariable "key: value"` or `-v "key: value` (can be used multiple times).
 
 ```
 USAGE:
-  $ lrc run module1/request1 --localVariable "user: lukas"
+  $ lrc run ./module1/request1.json --localVariable "user: lukas"
 
 production
 Headers:
@@ -560,56 +545,81 @@ Performs a REST call to a endpoint
 
 ```
 USAGE
-  $ lrc run [REQUESTPATH] [-v <value>] [-p <value>]
+$ lrc run endpoints/examplerequest.json --localVariable "user: lukas"
+./env/test.json
+Headers:
+Authorization: Bearer {{bearerToken}}
+User-Agent: Mozilla Firefox
+Variables:
+bearerToken=...
+baseUrl=http://www.google.com
+user=lmnch
+repository=LRClient
+requestUrl={{baseUrl}}/{{user}}/{{repository}}
 
-ARGUMENTS
-  REQUESTPATH  Path to request config in 'endpoints' directory
+endpoints/examplerequest.json
+POST {{requestUrl}}
 
-FLAGS
-  -p, --payload=<value>           Payload which should be used for the request
-  -v, --localVariable=<value>...  Local variables to overwrite endpoint or environment variables
+Requesting...
+POST http://www.google.com/lukas/LRClient
+Authorization: Bearer ...
+User-Agent: Mozilla Firefox
 
-DESCRIPTION
-  Performs a REST call to a endpoint
+Response:
+404 Not Found
+content-length: 1575
+content-type: text/html; charset=UTF-8
+date: Sat, 19 Nov 2022 09:33:10 GMT
+referrer-policy: no-referrer
+<!DOCTYPE html>
+<html lang=en>
+<meta charset=utf-8>
+<meta name=viewport content="initial-scale=1, minimum-scale=1, width=device-width">
+<title>Error 404 (Not Found)!!1</title>
+<style>
+  *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* > body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right:205px}p{margin:11px 0 22px;overflow:hidden}ins{color:#777;text-decoration:none}a img{border:0}@media screen and (max-width:772px){body{background:none;margin-top:0;max-width:none;padding-right:0}}#logo{background:url(//www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png) no-repeat;margin-left:-5px}@media only screen and (min-resolution:192dpi){#logo{background:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) no-repeat 0% 0%/100% 100%;-moz-border-image:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) 0}}@media only screen and (-webkit-min-device-pixel-ratio:2){#logo{background:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) no-repeat;-webkit-background-size:100% 100%}}#logo{display:inline-block;height:54px;width:150px}
+</style>
+<a href=//www.google.com/><span id=logo aria-label=Google></span></a>
+<p><b>404.</b> <ins>That’s an error.</ins>
+<p>The requested URL <code>/lukas/LRClient</code> was not found on this server.  <ins>That’s all we know.</ins>
 
-EXAMPLES
-  $ lrc run module1/request1 --localVariable "user: lukas"
-  production
-  Headers:
-  Authorization: Bearer {{bearerToken}}
-  User-Agent: Mozilla Firefox
-  Variables:
-  bearerToken=...
-  baseUrl=http://www.github.com
-  user=lmnch
-  repository=LRClient
-  requestUrl={{baseUrl}}/{{user}}/{{repository}}
-  module1/request1
-    GET {{requestUrl}}
-  Requesting...
-    GET http://www.github.com/lukas/LRClient
-  Authorization: Bearer ...
-  User-Agent: Mozilla Firefox
-  // TODO: add result
+  $ lrc run endpoints/examplerequest.json
+./env/test.json
+Headers:
+Authorization: Bearer {{bearerToken}}
+User-Agent: Mozilla Firefox
+Variables:
+bearerToken=...
+baseUrl=http://www.google.com
+user=lmnch
+repository=LRClient
+requestUrl={{baseUrl}}/{{user}}/{{repository}}
 
-  $ lrc run module1/request1 -v "user: lukas" -v "repository: lmnch.github.io"
-  production
-  Headers:
-  Authorization: Bearer {{bearerToken}}
-  User-Agent: Mozilla Firefox
-  Variables:
-  bearerToken=...
-  baseUrl=http://www.github.com
-  user=lmnch
-  repository=LRClient
-  requestUrl={{baseUrl}}/{{user}}/{{repository}}
-  module1/request1
-   GET {{requestUrl}}
-  Requesting...
-   GET http://www.github.com/lukas/lmnch.github.io
-  Authorization: Bearer ...
-  User-Agent: Mozilla Firefox
-  // TODO: add result
+./endpoints/examplerequest.json
+POST {{requestUrl}}
+
+Requesting...
+POST http://www.google.com/lmnch/LRClient
+Authorization: Bearer ...
+User-Agent: Mozilla Firefox
+
+Response:
+404 Not Found
+content-length: 1575
+content-type: text/html; charset=UTF-8
+date: Sat, 19 Nov 2022 09:31:37 GMT
+referrer-policy: no-referrer
+<!DOCTYPE html>
+<html lang=en>
+<meta charset=utf-8>
+<meta name=viewport content="initial-scale=1, minimum-scale=1, width=device-width">
+<title>Error 404 (Not Found)!!1</title>
+<style>
+*{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{margin:7% auto 0;max-width:390px;min-height:180px;padding:30px 0 15px}* > body{background:url(//www.google.com/images/errors/robot.png) 100% 5px no-repeat;padding-right:205px}p{margin:11px 0 22px;overflow:hidden}ins{color:#777;text-decoration:none}a img{border:0}@media screen and (max-width:772px){body{background:none;margin-top:0;max-width:none;padding-right:0}}#logo{background:url(//www.google.com/images/branding/googlelogo/1x/googlelogo_color_150x54dp.png) no-repeat;margin-left:-5px}@media only screen and (min-resolution:192dpi){#logo{background:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) no-repeat 0% 0%/100% 100%;-moz-border-image:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) 0}}@media only screen and (-webkit-min-device-pixel-ratio:2){#logo{background:url(//www.google.com/images/branding/googlelogo/2x/googlelogo_color_150x54dp.png) no-repeat;-webkit-background-size:100% 100%}}#logo{display:inline-block;height:54px;width:150px}
+</style>
+<a href=//www.google.com/><span id=logo aria-label=Google></span></a>
+<p><b>404.</b> <ins>That’s an error.</ins>
+<p>The requested URL <code>/lmnch/LRClient</code> was not found on this server.  <ins>That’s all we know.</ins>
 ```
 
 _See code: [dist/commands/run/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.2/dist/commands/run/index.ts)_
