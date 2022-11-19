@@ -17,4 +17,9 @@ export default class PayloadText implements Payload {
     toString(): string {
         return this.data.value;
     }
+
+    getContentTypeHeader(): string {
+        return "application/text";
+    }
+
 }

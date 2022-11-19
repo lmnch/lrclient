@@ -12,4 +12,6 @@ export default interface Payload {
 
     toString(): string;
 
+    getContentTypeHeader(): string;
+
 }
