@@ -13,6 +13,7 @@ import VariableMerger from "../variables/VariableMerger";
 import Payload from "../payload/Payload";
 import { loadPayload } from "../config/PayloadLoader";
 import PayloadText from "../payload/PayloadText";
+import LRCLoggerConfig from "../logging/LRCLoggerConfig";
 
 /**
  * LRClient which executes the requests based on the passed config parameters.
@@ -21,9 +22,11 @@ export default class LRClient {
 
     configManager = new ConfigManager();
     config: LRCConfig = new LRCConfig();
-    logger: LRCLogger = new LRCLogger();
+    logger: LRCLogger;
 
-    constructor() {
+    constructor(loggerConfig: LRCLoggerConfig=new LRCLoggerConfig({}), configManager: ConfigManager = new ConfigManager) {
+        this.configManager =configManager;
+        this.logger = new LRCLogger(loggerConfig);    
     }
 
     /**
@@ -50,12 +53,8 @@ export default class LRClient {
         const env = await loadEnvironment(this.config.selectedEnvironment);
         this.logger.logEnvironment(this.config.selectedEnvironment, env);
 
-        this.logger.nl();
-
         const endpoint = await loadEndpoint(path);
         this.logger.logEndpoint(path, endpoint);
-
-        this.logger.nl();
 
         const variables = VariableMerger.mergeVariables(localVariables, endpoint, env);
         const headers = VariableMerger.mergeHeaders(endpoint, env);
@@ -86,7 +85,6 @@ export default class LRClient {
 
         const body = await chosenPayload?.getBody(variables.variableStore);
         this.logger.logRequest(endpoint.method, resolvedUrl, resolvedHeaders, body);
-        this.logger.nl();
         const result = await fetch(resolvedUrl, {
             method: HttpMethod[endpoint.method],
             headers: resolvedHeaders, body
@@ -99,7 +97,6 @@ export default class LRClient {
         } catch (e) {
             extracted = new PayloadText("Error extracting the result!");
             this.logger.logError((await extracted.getBody({}))?.toString(), <Error>e);
-            this.logger.nl();
         }
 
         // Map headers back
@@ -111,6 +108,6 @@ export default class LRClient {
         this.logger.logResponse(result.status, result.statusText, responseHeaders, extracted);
 
         // No variable replacement for response
-        return extracted.getBody({});
+        return extracted.getData({});
     }
 }

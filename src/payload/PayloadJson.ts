@@ -9,7 +9,11 @@ export default class PayloadJson implements Payload {
         this.data = data;
     }
 
-    async getBody(variableScope: { [key: string]: Variable }): Promise<any> {
+    async getData(variableScope: { [key: string]: Variable; }): Promise<any> {
+        return JSON.parse(await this.getBody(variableScope))
+    }
+
+    async getBody(variableScope: { [key: string]: Variable }): Promise<string> {
         return new Variable("payload", JSON.stringify(this.data)).resolve(variableScope).value;
     }
 

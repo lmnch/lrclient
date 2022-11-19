@@ -14,4 +14,9 @@ export default interface Payload {
 
     getContentTypeHeader(): string;
 
+    /**
+     * Returns the payload in a type specific form for further scripting
+     */
+    getData(variableScope: { [key: string]: Variable }): Promise<any>;
+
 }

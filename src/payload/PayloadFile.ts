@@ -1,29 +1,24 @@
 import Payload from "./Payload";
-import * as fs from "fs";
+import * as fs from "fs/promises";
 import Variable from "../variables/Variable";
 
 export default class PayloadFile implements Payload {
 
     path: Variable;
 
-    constructor(path: string){
+    constructor(path: string) {
         this.path = new Variable("payloadPath", path);
     }
 
+    async getData(variableScope: { [key: string]: Variable }): Promise<any> {
+        // Resolve variables in path
+        const resolvedPath = this.path.resolve(variableScope);
+
+        return fs.readFile(resolvedPath.value, {})
+    }
+
     async getBody(variableScope: { [key: string]: Variable }): Promise<any> {
-        return new Promise((res, rej)=>{
-
-            // Resolve variables in path
-            const resolvedPath = this.path.resolve(variableScope);
-
-            fs.readFile(resolvedPath.value, {}, (err, data)=>{
-                if(err){
-                    rej(err);
-                }else{
-                    res(data);
-                }
-            })
-        })
+        return this.getData(variableScope);
     }
 
     toString(): string {
