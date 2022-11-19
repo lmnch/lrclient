@@ -8,8 +8,8 @@ export default class SetEnvironment extends Command {
   static description = 'Updates the current working environtment'
 
   static examples = [
-    `<%= config.bin %> <%= command.id %>
-production
+    `<%= config.bin %> <%= command.id %> ./env/test.json
+./env/test.json
 Headers:
 Authorization: Bearer {{bearerToken}}
 User-Agent: Mozilla Firefox
@@ -23,11 +23,9 @@ Updated config ⚙️
 `,
   ]
 
-  static configFile = ".config";
-
   static flags = {}
 
-  static args = [{ name: "environment", description: "Name of the environment file in 'environments' directory.", required: true }]
+  static args = [{ name: "environment", description: "Path to the environment json file", required: true }]
 
   static logger = new LRCLogger();
 

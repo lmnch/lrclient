@@ -4,7 +4,7 @@ import * as fs from 'fs/promises';
 import EndpointConfig from "./EndpointConfig";
 
 
-export default async function loadEndpoint(endpointPath:string): Promise<Endpoint>{
-    const data = await fs.readFile(LRCConstants.ENDPOINT_DIR_PATH + "/" + endpointPath + ".json");
-    return EndpointConfig.toEndpoint(<EndpointConfig>JSON.parse(data.toString())); 
+export default async function loadEndpoint(endpointPath: string): Promise<Endpoint> {
+    const data = await fs.readFile(endpointPath);
+    return EndpointConfig.toEndpoint(<EndpointConfig>JSON.parse(data.toString()));
 }

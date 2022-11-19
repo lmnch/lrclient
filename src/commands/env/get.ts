@@ -8,7 +8,8 @@ export default class GetEnvironment extends Command {
   static description = 'Returns the currently selected environment.'
 
   static examples = [
-    `<%= config.bin %> <%= command.id %>production
+    `<%= config.bin %> <%= command.id %>
+./env/test.json
 Headers:
 Authorization: Bearer {{bearerToken}}
 User-Agent: Mozilla Firefox
@@ -20,8 +21,6 @@ repository=LRClient
 requestUrl={{baseUrl}}/{{user}}/{{repository}}
 `,
   ]
-
-  static configFile = ".config";
 
   static flags = {}
 
