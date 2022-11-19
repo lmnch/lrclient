@@ -1,7 +1,10 @@
 import Payload from "./Payload";
 
-export default  interface PayloadExtractor {
+/**
+ * Extracts the payload from a response of a REST call
+ */
+export default interface PayloadExtractor {
 
      extractResult: (arg0: Response) => Promise<Payload>;
-     
+
 }

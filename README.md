@@ -6,6 +6,8 @@ Command-line, json-based REST-Client written in Typescript.
 * [Usage](#usage)
 * [Definitions](#definitions)
 * [Commands](#commands)
+* [Project Structure](#project-structure)
+* [All commands (generated)](#all-commands-generated)
 
 # Usage
 ```sh-session
@@ -219,6 +221,20 @@ User-Agent: Mozilla Firefox
 
 // TODO: Add result
 ```
+
+# Project structure
+
+The project uses [The Open CLI Framework](https://oclif.io/) to provide the REST client as cli tool.
+The source files for the commands are stored in `src/commands`.
+The commands call the configuration and REST client functionality by using the classes in the `src/boundary` directory.
+
+It contains the `LRClient` which performs the REST calls and the `ConfigManager` which allows to load and change the configuration.
+`src/model` contains the data classes that define how the requests are performed. 
+This contains some enums (`HttpMethod`, `PayloadType`) and classes that contain the definition (`Environment`, `Endpoint`).
+Further, theres a special directory `payload` for different payload types.
+They use classes from the `src/variables` directory which manage the variables and variable replacement.
+
+The `LRCLogger` (`src/logging/LRCLogger`) is used to print the model classes to the console in a colorful way.
 
 # All commands (generated)
 <!-- commands -->
