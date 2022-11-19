@@ -45,8 +45,7 @@ Updated config ⚙️
       SetEnvironment.logger.logEnvironment(config.selectedEnvironment, env)
     }
 
-    console.log("Updated config ⚙️");
-
+    this.log("Updated config ⚙️");
   }
 
 }

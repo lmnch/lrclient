@@ -49,11 +49,11 @@ The value of a variable can be defined on different levels which overwrite each 
 3. Environment variables: Defined for the currently selected environment 
 
 Variable values can contain other variables (but please do not create circular dependencies):
-```
+```json
 {
   "variables": {
     "username": "bernd",
-    "authorization": "{{username}}:{{password}}"
+    "authorization": "{{username}}:{{password}}",
     "password": "bernd!rocks"
   }
 }
@@ -66,14 +66,14 @@ There's a similar hierarchy like for variables:
 2. Environment headers
 
 Variables can be used inside of the value of a header:
-```
+```json
 {
   "headers": {
     "Authorization": "{{authorization}}"
-  }
+  },
   "variables": {
     "username": "bernd",
-    "authorization": "{{username}}:{{password}}"
+    "authorization": "{{username}}:{{password}}",
     "password": "bernd!rocks"
   }
 }
@@ -81,7 +81,7 @@ Variables can be used inside of the value of a header:
 
 ## Payloads
 A payload can be used by creating a json file of this form:
-```
+```json
 {
     "payloadType": "application/json",
     "data": "{\"street\":\"Teststreet\",\"name\": \"{{user}}\"}"
@@ -104,11 +104,11 @@ The payload can be selected by refering it in the send command call [`lrc send E
 The job of a REST-Client is obvoiusly to call REST-Endpoints.
 Such an endpoint is defined as following:
 
-```
+```json
 {
-  "url": "http://localhost:8080/api/upload"
+  "url": "http://localhost:8080/api/upload",
   "method": "POST",
-  "resultType": "application/json"
+  "resultType": "application/json",
   "headers": {
     "User-Agent": "Mozilla Firefox"
   },
@@ -134,7 +134,7 @@ TODO: improve
 The LRClient can be configured by using different environments.
 An environment contains headers and custom variables which are applied to all request executed with the enviroment.
 
-```
+```json
 {
   "headers": {
     "Authorization": "Bearer {{bearerToken}}",
@@ -157,6 +157,7 @@ But, one can switch between different files with the [`lrc env set`](#lrc-env-se
 * [`lrc env set`](#lrc-env-set)
 * [`lrc env get`](#lrc-env-set)
 * [`lrc send ENDPOINT`](#lrc-send-endpoint)
+* [`lrc script execute SCRIPTFILE`](#lrc-script-execute-scriptfile)
 
 ## `lrc env set`
 
@@ -221,6 +222,54 @@ User-Agent: Mozilla Firefox
 
 // TODO: Add result
 ```
+
+## `lrc script execute SCRIPTFILE`
+
+Executes the ECMA script file that is located at the passed position.
+Inside of these script files, the variables `lrc` - which is an instance of the `LRClient` - and `log` - which is a function like `console.log` - can be used.
+Furthermore, the await keyword can be used to wait for the result of `lrc.send`.
+
+### Example
+
+```javascript
+let password = "test";
+
+// Creates a new user
+const createdUser = await lrc.send("./endpoints/create-new-user.json", { name: "lukas", password: password });
+
+// Update the user's password 10 times
+for(let i = 0; i < 10; i++){
+  let newPassword = password;
+  await lrc.send("./endpoints/update-password.json", {name: "lukas", oldPassword: password, newPassword: newPassword});
+  password = newPassword;
+}
+```
+
+### Implementation
+
+Internally, the imported script is wrapped in a async function with `lrc` and `log` as parameters.
+These values are passed to the context of the execution.
+So internally, the example from before results in the following snippet:
+```javascript
+const executionLrcMethod = async (lrc) => { 
+
+  let password = "test";
+
+  // Creates a new user
+  const createdUser = await lrc.send("./endpoints/create-new-user.json", { name: "lukas", password: password });
+
+  // Update the user's password 10 times
+  for(let i = 0; i < 10; i++){
+    let newPassword = password;
+    await lrc.send("./endpoints/update-password.json", {name: "lukas", oldPassword: password, newPassword: newPassword});
+    password = newPassword;
+  }
+
+};
+executionLrcMethod(lrc, log);
+```
+This allows the usage of the `await` keyword in the script files. 
+
 
 # Project structure
 

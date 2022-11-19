@@ -37,7 +37,7 @@ requestUrl={{baseUrl}}/{{user}}/{{repository}}
       const env = await loadEnv(config.selectedEnvironment);
       GetEnvironment.logger.logEnvironment(config.selectedEnvironment, env)
     }else{
-      console.log(`No environment selected!`);
+      this.log(`No environment selected!`);
     }
 
   }
