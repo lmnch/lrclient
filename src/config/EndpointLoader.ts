@@ -10,7 +10,6 @@ import { loadPayload } from "./PayloadLoader";
 class EndpointConfig {
     url: string = "";
     method: keyof typeof HttpMethod = "GET";
-    accept: keyof typeof PayloadType = "APPLICATION_JSON";
 
     headers: { [name: string]: string } = {};
     variables: { [key: string]: string } = {};
@@ -31,12 +30,11 @@ class EndpointConfig {
 
     static async toEndpoint(ec: EndpointConfig): Promise<Endpoint> {
         const method = ec.method ? HttpMethod[ec.method] : HttpMethod.GET;
-        const accept = ec.accept ? PayloadType[ec.accept] : PayloadType.APPLICATION_JSON;
         let payload = undefined;
         if(ec.payload){
             payload = await loadPayload(ec.payload);
         }
-        return new Endpoint(new Variable("url", ec.url), method, accept, EndpointConfig._mapHeaders(ec.headers), new VariableManager(ec.variables), payload);
+        return new Endpoint(new Variable("url", ec.url), method, EndpointConfig._mapHeaders(ec.headers), new VariableManager(ec.variables), payload);
     }
 }
 

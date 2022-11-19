@@ -42,17 +42,18 @@ export default class LRCLogger {
             Object.entries(e.headers).forEach(([key, variable]) => {
                 logger.color("cyan").log(`${key}: ${variable.value}`)
             });
-
-            if (e.payload) {
-                logger.color("blue").log(e.payload.toString());
-            }
+        }
+        if (this.loggerConfig.logEndpointPayload && e.payload) {
+            logger.color("blue").log(e.payload.toString());
+        }
+        if (this.loggerConfig.logEndpoint || this.loggerConfig.logEndpointPayload && e.payload) {
             this.nl();
         }
     }
 
     logRequest(method: HttpMethod, url: string, headers: { [key: string]: string }, body: any = "") {
         if (this.loggerConfig.logRequest) {
-            logger.bold().underscore().color("black").log("Requesting...");
+            logger.bold().underscore().color("black").log("Request:");
             let normalizedMethod = method.toString();
             while (normalizedMethod.length < 4) {
                 normalizedMethod = " " + normalizedMethod;
@@ -61,9 +62,12 @@ export default class LRCLogger {
             Object.entries(headers).forEach(([key, header]) => {
                 logger.color("cyan").log(`${key}: ${header}`)
             });
-            if (body) {
-                logger.color("blue").log(body);
-            }
+        }
+        if (this.loggerConfig.logRequestBody && body) {
+            logger.color("blue").log(body);
+        }
+
+        if (this.loggerConfig.logRequest || this.loggerConfig.logRequestBody && body) {
             this.nl();
         }
     }
@@ -72,7 +76,11 @@ export default class LRCLogger {
         if (this.loggerConfig.logResponse) {
             logger.bold().underscore().color("white").log("Response:");
 
-            logger.bgColor(status < 300 ? "green" : status > 400 && status < 500 ? "red" : status >= 500 ? "magenta" : "white").color("black").log(status).joint().color("white").log(" " + statusText);
+            logger.bgColor(status < 300 ? "green" :
+                status > 400 && status < 500 ? "red" :
+                    status >= 500 ? "magenta" :
+                        "white")
+                .color("black").log(status).joint().color("white").log(" " + statusText);
 
             Object.entries(headers).forEach(([key, header]) => {
                 logger.color("yellow").log(`${key}: ${header}`)
@@ -83,14 +91,16 @@ export default class LRCLogger {
             logger.color("white").log(payload.toString());
         }
 
-        if(this.loggerConfig.logResponse || this.loggerConfig.logResponseBody && payload){
+        if (this.loggerConfig.logResponse || this.loggerConfig.logResponseBody && payload) {
             this.nl()
         }
     }
 
     logError(message: string | undefined, e: Error) {
-        logger.bgColor("red").log("!!!").joint().bgColor("yellow").color("black").log(message);
-        logger.log(e);
+        logger.bgColor("red").color("black").log(message);
+        logger.color("red").log(e.message);
+        logger.color("red").log(e.stack);
+        this.nl();
     }
 
     nl() {

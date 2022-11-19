@@ -14,6 +14,8 @@ import Payload from "../payload/Payload";
 import { loadPayload } from "../config/PayloadLoader";
 import PayloadText from "../payload/PayloadText";
 import LRCLoggerConfig from "../logging/LRCLoggerConfig";
+import PayloadType from "../model/PayloadType";
+import payloadExtractor from "../payload/SupportedPayloadExtractors";
 
 /**
  * LRClient which executes the requests based on the passed config parameters.
@@ -24,9 +26,9 @@ export default class LRClient {
     config: LRCConfig = new LRCConfig();
     logger: LRCLogger;
 
-    constructor(loggerConfig: LRCLoggerConfig=new LRCLoggerConfig({}), configManager: ConfigManager = new ConfigManager) {
-        this.configManager =configManager;
-        this.logger = new LRCLogger(loggerConfig);    
+    constructor(loggerConfig: LRCLoggerConfig = new LRCLoggerConfig({}), configManager: ConfigManager = new ConfigManager) {
+        this.configManager = configManager;
+        this.logger = new LRCLogger(loggerConfig);
     }
 
     /**
@@ -85,27 +87,31 @@ export default class LRClient {
 
         const body = await chosenPayload?.getBody(variables.variableStore);
         this.logger.logRequest(endpoint.method, resolvedUrl, resolvedHeaders, body);
-        const result = await fetch(resolvedUrl, {
+        const response = await fetch(resolvedUrl, {
             method: HttpMethod[endpoint.method],
             headers: resolvedHeaders, body
-        })
-
-        const resultExtractor = supportedResultExtractors[endpoint.resultType];
+        });
+        
         let extracted: Payload;
+        let error: any = undefined;
         try {
-            extracted = await resultExtractor.extractResult(result);
+            extracted = await payloadExtractor.extractIfPossible(response);
         } catch (e) {
             extracted = new PayloadText("Error extracting the result!");
-            this.logger.logError((await extracted.getBody({}))?.toString(), <Error>e);
+            error = e;
         }
 
         // Map headers back
         const responseHeaders: { [key: string]: string } = {};
-        result.headers.forEach((value, key) => {
+        response.headers.forEach((value, key) => {
             responseHeaders[key] = value;
         })
 
-        this.logger.logResponse(result.status, result.statusText, responseHeaders, extracted);
+        this.logger.logResponse(response.status, response.statusText, responseHeaders, extracted);
+
+        if (error) {
+            this.logger.logError((await extracted.getBody({}))?.toString(), <Error>error);
+        }
 
         // No variable replacement for response
         return extracted.getData({});

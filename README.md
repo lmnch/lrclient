@@ -15,19 +15,6 @@ $ npm install -g lrclient
 $ lrc COMMAND
 running command...
 $ lrc send ./endpoints/accounts/user/profile.json -v "user: lmnch"
-./env/production.json
-Headers:
-Authorization: Bearer {{bearerToken}}
-User-Agent: Mozilla Firefox
-Variables:
-bearerToken=...
-baseUrl=http://www.github.com
-repository=LRClient
-requestUrl={{baseUrl}}/{{user}}/{{repository}}
-
-./endpoints/accounts/user/profile.json
- GET {{requestUrl}}
-
 Requesting...
  GET http://www.github.com/lmnch/LRClient
 Authorization: Bearer ...
@@ -108,7 +95,6 @@ Such an endpoint is defined as following:
 {
   "url": "http://localhost:8080/api/upload",
   "method": "POST",
-  "resultType": "application/json",
   "headers": {
     "User-Agent": "Mozilla Firefox"
   },
@@ -124,10 +110,6 @@ It is also possible to overwrite/supplement the headers and variables defined in
 
 The endpoint file that should be used can be selected by its path when using the [send command](#lrc-send-endpoint).
 
-### Result type
-
-The result time determines how the http response is handled and returned.
-TODO: improve
 
 ## Environments
 
@@ -270,6 +252,21 @@ executionLrcMethod(lrc, log);
 ```
 This allows the usage of the `await` keyword in the script files. 
 
+# Logging
+
+For all the request sending commands ([`lrc send ENDPOINT`](#lrc-send-endpoint) and [`lrc script execute SCRIPTFILE`](#lrc-script-execute-scriptfile)), the default logging behaviour can be overwritten by using the `loggedFields` flag (or the alias `-l`).
+Multiple values can be passed using this flag:
+* `env`: Logs the current environment before executing the request (this contains headers and variables)
+* `endpoint`: Logs the endpoint definition which was selected (contains basic information like url but also variables and headers)
+* `endpoint_payload`: Logs the payload which is linked in the endpoint
+* `req`: Logs the resulting request after variable resolution
+* `req_body`: Logs the resulting body after variable replacement
+* `resp`: Logs information about the response like status code
+* `resp_body`: Logs the extracted body of the response
+
+The [`lrc send ENDPOINT`](#lrc-send-endpoint) command uses per default the logging flags `req`, `req_body`, `resp`, and `resp_body`.
+The [`lrc script execute SCRIPTFILE`](#lrc-script-execute-scriptfile)) command (logging flags apply to all requests made by the script) logs per default nothing.
+Setting one of the flags as parameter in the cli **overwrites** the default behaviour what means the default flags won't be logged (if they are not specified again manually).
 
 # Project structure
 
