@@ -3,9 +3,22 @@ import Environment from "../model/Environment";
 import Variable from "./Variable";
 import VariableManager from "./VariableManager";
 
-
+/**
+ * Merges variables and headers together
+ */
 export default class VariableMerger {
     
+    /**
+     * Merges variables tother:
+     * - localVariables overwrite
+     * - endpoint variables overwrite
+     * - environment variables
+     * 
+     * @param localVariables 
+     * @param endpoint 
+     * @param environment 
+     * @returns 
+     */
     static mergeVariables(localVariables: { [key: string]: string } = {}, endpoint: Endpoint, environment: Environment) : VariableManager {
         const merged :  { [key: string]: string } = {};
 
@@ -38,6 +51,15 @@ export default class VariableMerger {
         return new VariableManager(merged);
     }
 
+    /**
+     * Merges headers together:
+     * - endpoint headers overwrite
+     * - environment headers
+     * 
+     * @param endpoint 
+     * @param environment 
+     * @returns 
+     */
     static mergeHeaders(endpoint: Endpoint, environment: Environment) : {[key: string]: Variable} {
         const merged :  { [key: string]: Variable } = {};
 

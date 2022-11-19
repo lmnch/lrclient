@@ -24,5 +24,7 @@ const supportedResultExtractors: { [key: string]: PayloadExtractor } = {};
 supportedResultExtractors[PayloadType.APPLICATION_JSON] = new JsonPayloadExtractor();
 supportedResultExtractors[PayloadType.APPLICATION_TEXT] = new TextPayloadExtractor();
 
-
+/**
+ * Contains extractors for different PayloadTypes
+ */
 export default supportedResultExtractors;
