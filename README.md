@@ -154,7 +154,7 @@ But, one can switch between different files with the [`lrc env set`](#lrc-env-se
 
 * [`lrc env set`](#lrc-env-set)
 * [`lrc env get`](#lrc-env-set)
-* [`lrc run ENDPOINT`](#lrc-run-endpoint)
+* [`lrc send ENDPOINT`](#lrc-send-endpoint)
 
 ## `lrc env set`
 
@@ -234,7 +234,7 @@ User-Agent: Mozilla Firefox
 * [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-1)
 * [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-2)
 * [`lrc plugins update`](#lrc-plugins-update)
-* [`lrc send REQUESTPATH`](#lrc-run-requestpath)
+* [`lrc send REQUESTPATH`](#lrc-send-requestpath)
 
 ## `lrc env get`
 
@@ -630,5 +630,5 @@ EXAMPLES
     <p>The requested URL <code>/lmnch/LRClient</code> was not found on this server.  <ins>That’s all we know.</ins>
 ```
 
-_See code: [dist/commands/send/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.3/dist/commands/send/index.ts)_
+_See code: [dist/commands/send/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.4/dist/commands/send/index.ts)_
 <!-- commandsstop -->
