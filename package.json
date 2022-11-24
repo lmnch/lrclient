@@ -1,6 +1,6 @@
 {
   "name": "lrclient",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "JSON file based REST client for developers written in Typescript",
   "author": "lmnch",
   "bin": {
