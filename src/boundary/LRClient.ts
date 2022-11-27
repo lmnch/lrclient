@@ -16,6 +16,7 @@ import PayloadText from "../payload/PayloadText";
 import LRCLoggerConfig from "../logging/LRCLoggerConfig";
 import PayloadType from "../model/PayloadType";
 import payloadExtractor from "../payload/SupportedPayloadExtractors";
+import ClientListener from "./ClientListener";
 
 /**
  * LRClient which executes the requests based on the passed config parameters.
@@ -25,6 +26,8 @@ export default class LRClient {
     configManager = new ConfigManager();
     config: LRCConfig = new LRCConfig();
     logger: LRCLogger;
+
+    listeners: ClientListener[] = [];
 
     constructor(loggerConfig: LRCLoggerConfig = new LRCLoggerConfig({}), configManager: ConfigManager = new ConfigManager) {
         this.configManager = configManager;
@@ -87,11 +90,12 @@ export default class LRClient {
 
         const body = await chosenPayload?.getBody(variables.variableStore);
         this.logger.logRequest(endpoint.method, resolvedUrl, resolvedHeaders, body);
+        this.listeners.forEach(l => l.onRequestSent({ method: endpoint.method, url: resolvedUrl, headers: resolvedHeaders, body: body }));
         const response = await fetch(resolvedUrl, {
             method: HttpMethod[endpoint.method],
             headers: resolvedHeaders, body
         });
-        
+
         let extracted: Payload;
         let error: any = undefined;
         try {
