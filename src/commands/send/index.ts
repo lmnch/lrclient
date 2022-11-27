@@ -5,6 +5,7 @@ import LRClient from '../../boundary/LRClient';
 import BaseCommand from '../BaseCommand';
 import LRCListener from '../../boundary/LRCListener';
 import LRCRequest from '../../model/LRCRequest';
+import LRCResponse from '../../model/LRCResponse';
 
 export default class Send extends BaseCommand implements LRCListener {
   static description = 'Performs a REST call to a endpoint'
@@ -59,18 +60,19 @@ referrer-policy: no-referrer
   ]
 
   onRequestSent(request: LRCRequest): void {
-    CliUx.ux.action.start('starting a process')
+    CliUx.ux.action.start('Sending request', "", {stdout: true})
   }
   
-  onResponseReceived(response: Response): void {
-    CliUx.ux.action.stop('starting a process')
+  onResponseReceived(response: LRCResponse): void {
+    CliUx.ux.action.stop('\u2713')
+    this.log();
   }
 
   async run(): Promise<void> {
     const { args, flags } = await this.parse(Send);
 
     const client = new LRClient(this.getLoggerConfig(flags.loggedFields));
-    await client.init();
+    await client.init({listeners: [this]});
 
     const localDefinition: { [key: string]: string } = {};
     const { localVariable } = flags;

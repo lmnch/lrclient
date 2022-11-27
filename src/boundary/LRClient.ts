@@ -18,6 +18,7 @@ import PayloadType from "../model/PayloadType";
 import payloadExtractor from "../payload/SupportedPayloadExtractors";
 import LRCListener from "./LRCListener";
 import LRCRequest from "../model/LRCRequest";
+import LRCResponse from "../model/LRCResponse";
 
 /**
  * LRClient which executes the requests based on the passed config parameters.
@@ -38,8 +39,9 @@ export default class LRClient {
     /**
      * Loads the config file
      */
-    async init() {
+    async init(options: {listeners: LRCListener[]} = {listeners: []}) {
         this.config = await this.configManager.loadConfig();
+        this.listeners = options.listeners;
     }
 
     /**
@@ -92,33 +94,13 @@ export default class LRClient {
         const body = await chosenPayload?.getBody(variables.variableStore);
         const request = new LRCRequest(endpoint.method, resolvedUrl, resolvedHeaders, body);
         this.logger.logRequest(request);
-        this.listeners.forEach(l => l.onRequestSent(request));
-        const response = await request.fetch();
+        this.listeners.forEach(l => l.onRequestSent(request));        
+        const response = new LRCResponse(await request.fetch());
 
         this.listeners.forEach(l=>l.onResponseReceived(response));
-
-        let extracted: Payload;
-        let error: any = undefined;
-        try {
-            extracted = await payloadExtractor.extractIfPossible(response);
-        } catch (e) {
-            extracted = new PayloadText("Error extracting the result!");
-            error = e;
-        }
-
-        // Map headers back
-        const responseHeaders: { [key: string]: string } = {};
-        response.headers.forEach((value, key) => {
-            responseHeaders[key] = value;
-        })
-
-        this.logger.logResponse(response.status, response.statusText, responseHeaders, extracted);
-
-        if (error) {
-            this.logger.logError((await extracted.getBody({}))?.toString(), <Error>error);
-        }
+        await this.logger.logResponse(response);
 
         // No variable replacement for response
-        return (await extracted.getData()).value;
+        return (await (await response.extractPayload())?.getData())?.value;
     }
 }
