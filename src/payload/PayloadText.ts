@@ -10,12 +10,12 @@ export default class PayloadText implements Payload {
         this.data = new Variable("payload", data);
     }
 
-    async getData(variableScope: { [key: string]: Variable; }): Promise<string> {
-        return this.data.resolve(variableScope).value;
+    async getData(): Promise<Variable> {
+        return this.data;
     }
 
     async getBody(variableScope: { [key: string]: Variable }): Promise<any> {
-        return this.getData(variableScope);
+        return (await this.getData()).resolve(variableScope);
     }
 
     toString(): string {

@@ -2,6 +2,7 @@ import * as logger from "node-color-log";
 import Endpoint from "../model/Endpoint";
 import Environment from "../model/Environment";
 import HttpMethod from "../model/HttpMethod";
+import LRCRequest from "../model/LRCRequest";
 import Payload from "../payload/Payload";
 import LRCLoggerConfig from "./LRCLoggerConfig";
 
@@ -51,23 +52,23 @@ export default class LRCLogger {
         }
     }
 
-    logRequest(method: HttpMethod, url: string, headers: { [key: string]: string }, body: any = "") {
+    logRequest(req: LRCRequest) {
         if (this.loggerConfig.logRequest) {
             logger.bold().underscore().color("black").log("Request:");
-            let normalizedMethod = method.toString();
+            let normalizedMethod = req.method.toString();
             while (normalizedMethod.length < 4) {
                 normalizedMethod = " " + normalizedMethod;
             }
-            logger.bgColor("magenta").color("black").log(normalizedMethod).joint().color("blue").log(" " + url);
-            Object.entries(headers).forEach(([key, header]) => {
+            logger.bgColor("magenta").color("black").log(normalizedMethod).joint().color("blue").log(" " + req.url);
+            Object.entries(req.headers).forEach(([key, header]) => {
                 logger.color("cyan").log(`${key}: ${header}`)
             });
         }
-        if (this.loggerConfig.logRequestBody && body) {
-            logger.color("blue").log(body);
+        if (this.loggerConfig.logRequestBody && req.body) {
+            logger.color("blue").log(req.body);
         }
 
-        if (this.loggerConfig.logRequest || this.loggerConfig.logRequestBody && body) {
+        if (this.loggerConfig.logRequest || this.loggerConfig.logRequestBody && req.body) {
             this.nl();
         }
     }
