@@ -1,6 +1,10 @@
 
 import HttpMethod from "./HttpMethod";
 
+/**
+ * Should only contain teh resolved values.
+ * These values will be directly send to the endpoint.
+ */
 export default class LRCRequest {
 
     method: HttpMethod;

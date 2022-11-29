@@ -94,8 +94,9 @@ export default class LRClient {
         const body = await chosenPayload?.getBody(variables.variableStore);
         const request = new LRCRequest(endpoint.method, resolvedUrl, resolvedHeaders, body);
         this.logger.logRequest(request);
+        const requestPromise = request.fetch()
         this.listeners.forEach(l => l.onRequestSent(request));        
-        const response = new LRCResponse(await request.fetch());
+        const response = new LRCResponse(await requestPromise);
 
         this.listeners.forEach(l=>l.onResponseReceived(response));
         await this.logger.logResponse(response);

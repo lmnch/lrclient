@@ -6,7 +6,7 @@ import payloadExtractor from "../payload/SupportedPayloadExtractors";
 
 
 /**
- * Response wrapper 
+ * Response wrapper for the server's response.
  */
 export default class LRCResponse {
 
@@ -28,6 +28,11 @@ export default class LRCResponse {
         })
     }
 
+    /**
+     * Extracts the payload of it was not already extracted before.
+     * 
+     * @returns extracted payload (extracted now or already before)
+     */
     async extractPayload(): Promise<Payload|null> {        
         if(this._extractedPayload!==undefined){
             return this._extractedPayload;
