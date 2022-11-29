@@ -10,7 +10,7 @@ export default class PayloadFile implements Payload {
         this.path = new Variable("payloadPath", path);
     }
 
-    async getData(): Promise<Variable> {
+    async getData(): Promise<any> {
         return this.path;
     }
     

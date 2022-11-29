@@ -101,6 +101,7 @@ export default class LRClient {
         await this.logger.logResponse(response);
 
         // No variable replacement for response
-        return (await (await response.extractPayload())?.getData())?.value;
+        const p = await response.extractPayload();        
+        return await p?.getData();
     }
 }

@@ -18,7 +18,12 @@ class PayloadConfig {
         }
         switch (pc.payloadType) {
             case PayloadType.APPLICATION_JSON.toString():
+                try{
                 return new PayloadJson(JSON.parse(pc.data))
+                }catch(e){
+                    console.log(pc.data);
+                    throw e;
+                }
             case PayloadType.APPLICATION_TEXT.toString():
                 return new PayloadText(pc.data);
             case PayloadType.APPLICATION_OCTET_STREAM.toString():

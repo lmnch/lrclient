@@ -16,6 +16,6 @@ export default interface Payload {
     /**
      * Returns the payload in a type specific form for further scripting (without variable replacement)
      */
-    getData(): Promise<Variable>;
+    getData(): Promise<any>;
 
 }
