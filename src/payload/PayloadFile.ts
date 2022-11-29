@@ -4,23 +4,23 @@ import Variable from "../variables/Variable";
 
 export default class PayloadFile implements Payload {
 
-    path: Variable;
+    path: string;
 
     constructor(path: string) {
-        this.path = new Variable("payloadPath", path);
+        this.path = path;
     }
 
-    async getData(): Promise<any> {
+    async getData(): Promise<string> {
         return this.path;
     }
     
     async getBody(variableScope: { [key: string]: Variable }): Promise<any> {
         // Resolve variables in path
-        return fs.readFile((await this.getData()).resolve(variableScope).value, {});
+        return fs.readFile(new Variable("payloaPath",(await this.getData())).resolve(variableScope).value, {});
     }
 
     toString(): string {
-        return `[FILE] ${this.path.value}`;
+        return `[FILE] ${this.path}`;
     }
 
     getContentTypeHeader(): string {
