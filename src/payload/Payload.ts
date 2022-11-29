@@ -1,6 +1,5 @@
 import Variable from "../variables/Variable";
 
-
 export default interface Payload {
 
     /**
@@ -15,8 +14,8 @@ export default interface Payload {
     getContentTypeHeader(): string;
 
     /**
-     * Returns the payload in a type specific form for further scripting
+     * Returns the payload in a type specific form for further scripting (without variable replacement)
      */
-    getData(variableScope: { [key: string]: Variable }): Promise<any>;
+    getData(): Promise<any>;
 
 }
