@@ -18,4 +18,8 @@ export default interface Payload {
      */
     getData(): Promise<any>;
 
+    /**
+     * Returns the raw (not resolved data) but maybe formatted (depends).
+     */
+    getRawData(formatted: boolean): Promise<string>;
 }

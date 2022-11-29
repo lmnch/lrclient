@@ -1,6 +1,6 @@
 
 import { Command } from '@oclif/core';
-import { loadPayload } from '../../config/PayloadLoader';
+import { loadPayload, updatePayloadData } from '../../config/PayloadLoader';
 import { launchEditor } from '../../external/LaunchEditor';
 
 
@@ -21,7 +21,8 @@ export default class EditPayload extends Command {
 
         const payload = await loadPayload(args.payload);
 
-        console.log(await launchEditor(JSON.stringify(payload, null, 4)));
+        const edited : string = await launchEditor(await payload.getRawData(true));
+       await updatePayloadData(args.payload, edited);
     }
 
 }

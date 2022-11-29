@@ -18,7 +18,7 @@ class PayloadConfig {
         }
         switch (pc.payloadType) {
             case PayloadType.APPLICATION_JSON.toString():
-                return new PayloadJson(JSON.parse(pc.data))
+                return new PayloadJson(pc.data)
             case PayloadType.APPLICATION_TEXT.toString():
                 return new PayloadText(pc.data);
             case PayloadType.APPLICATION_OCTET_STREAM.toString():
@@ -32,7 +32,17 @@ class PayloadConfig {
 
 }
 
-export async function loadPayload(payloadPath: string): Promise<Payload> {
+async function _loadPayloadConfig(payloadPath: string): Promise<PayloadConfig> {
     const data = await fs.readFile(payloadPath);
-    return PayloadConfig.toPayload(<PayloadConfig>JSON.parse(data.toString()));
+    return <PayloadConfig>JSON.parse(data.toString())
+}
+
+export async function loadPayload(payloadPath: string): Promise<Payload> {
+    return PayloadConfig.toPayload(await _loadPayloadConfig(payloadPath));
+}
+
+export async function updatePayloadData(payloadPath: string, data: string) {
+    const payloadConfig = await _loadPayloadConfig(payloadPath);
+    payloadConfig.data = data;
+    await fs.writeFile(payloadPath, JSON.stringify(payloadConfig));
 }
