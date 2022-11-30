@@ -5,7 +5,7 @@ import { loadEnv } from '../../config/EnvironmentLoader';
 import ConfigManager from '../../boundary/ConfigManager';
 
 export default class SetEnvironment extends Command {
-  static description = 'Updates the current working environtment'
+  static description = 'Updates the current working environment'
 
   static examples = [
     `<%= config.bin %> <%= command.id %> ./env/test.json

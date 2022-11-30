@@ -7,7 +7,7 @@ import LRCLogger from '../../logging/LRCLogger';
 
 
 export default class EditPayload extends Command {
-    static description = 'Updates the current working environtment'
+    static description = 'Updates the payload data of the passed payload definition';
 
     static examples = [
         `<%= config.bin %> <%= command.id %> payloads/example.json
