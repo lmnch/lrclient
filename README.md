@@ -321,8 +321,10 @@ The `LRCLogger` (`src/logging/LRCLogger`) is used to print the model classes to 
 * [`lrc BaseCommand`](#lrc-basecommand)
 * [`lrc env get`](#lrc-env-get)
 * [`lrc env set ENVIRONMENT`](#lrc-env-set-environment)
-* [`lrc exec SCRIPT`](#lrc-exec-script)
 * [`lrc help [COMMAND]`](#lrc-help-command)
+* [`lrc payload edit PAYLOAD`](#lrc-payload-edit-payload)
+* [`lrc payload new PAYLOAD`](#lrc-payload-new-payload)
+* [`lrc pe PAYLOAD`](#lrc-pe-payload)
 * [`lrc plugins`](#lrc-plugins)
 * [`lrc plugins:install PLUGIN...`](#lrc-pluginsinstall-plugin)
 * [`lrc plugins:inspect PLUGIN...`](#lrc-pluginsinspect-plugin)
@@ -332,7 +334,9 @@ The `LRCLogger` (`src/logging/LRCLogger`) is used to print the model classes to 
 * [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-1)
 * [`lrc plugins:uninstall PLUGIN...`](#lrc-pluginsuninstall-plugin-2)
 * [`lrc plugins update`](#lrc-plugins-update)
+* [`lrc pn PAYLOAD`](#lrc-pn-payload)
 * [`lrc script execute SCRIPT`](#lrc-script-execute-script)
+* [`lrc se SCRIPT`](#lrc-se-script)
 * [`lrc send REQUESTPATH`](#lrc-send-requestpath)
 
 ## `lrc BaseCommand`
@@ -345,7 +349,7 @@ GLOBAL FLAGS
   --loggedFields=(env|endpoint|endpoint_payload|req|req_body|resp|resp_body)...  Specify level for logging.
 ```
 
-_See code: [dist/commands/BaseCommand.ts](https://github.com/lmnch/LRClient/blob/v0.0.7/dist/commands/BaseCommand.ts)_
+_See code: [dist/commands/BaseCommand.ts](https://github.com/lmnch/LRClient/blob/v0.0.8/dist/commands/BaseCommand.ts)_
 
 ## `lrc env get`
 
@@ -374,7 +378,7 @@ EXAMPLES
 
 ## `lrc env set ENVIRONMENT`
 
-Updates the current working environtment
+Updates the current working environment
 
 ```
 USAGE
@@ -384,7 +388,7 @@ ARGUMENTS
   ENVIRONMENT  Path to the environment json file
 
 DESCRIPTION
-  Updates the current working environtment
+  Updates the current working environment
 
 EXAMPLES
   $ lrc env set ./env/test.json
@@ -399,31 +403,6 @@ EXAMPLES
   repository=LRClient
   requestUrl={{baseUrl}}/{{user}}/{{repository}}
   Updated config ⚙️
-```
-
-## `lrc exec SCRIPT`
-
-Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be used). Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
-
-```
-USAGE
-  $ lrc exec [SCRIPT] [--loggedFields env|endpoint|endpoint_payload|req|req_body|resp|resp_body]
-
-ARGUMENTS
-  SCRIPT  Path to script that should be executed
-
-GLOBAL FLAGS
-  --loggedFields=(env|endpoint|endpoint_payload|req|req_body|resp|resp_body)...  Specify level for logging.
-
-DESCRIPTION
-  Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be
-  used). Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
-
-ALIASES
-  $ lrc exec
-
-EXAMPLES
-  $ lrc exec ./scripts/testscript.js
 ```
 
 ## `lrc help [COMMAND]`
@@ -445,6 +424,93 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.19/src/commands/help.ts)_
+
+## `lrc payload edit PAYLOAD`
+
+Updates the payload data of the passed payload definition
+
+```
+USAGE
+  $ lrc payload edit [PAYLOAD]
+
+ARGUMENTS
+  PAYLOAD  Path to the payload definition json file
+
+DESCRIPTION
+  Updates the payload data of the passed payload definition
+
+ALIASES
+  $ lrc pe
+
+EXAMPLES
+  $ lrc payload edit payloads/example.json
+  *opens editor*
+  Type: application/json
+  {
+      "test": 123
+  }
+```
+
+## `lrc payload new PAYLOAD`
+
+Creates a new payload configuration file
+
+```
+USAGE
+  $ lrc payload new [PAYLOAD] [-t <value>]
+
+ARGUMENTS
+  PAYLOAD  Path to the payload definition json file
+
+FLAGS
+  -t, --payloadType=<value>  Type of the payload (application/json, application/text, application/octet-stream,
+                             application/pdf)
+
+DESCRIPTION
+  Creates a new payload configuration file
+
+ALIASES
+  $ lrc pn
+
+EXAMPLES
+  $ lrc payload new payloads/example.json
+  Which type of payload should be created?
+  (x) application/json
+  ( ) application/text
+  ( ) application/octet-stream
+  ( ) application/pdf
+  *opens editor*
+  Type: application/json
+  {
+      "test": 123
+  }
+```
+
+## `lrc pe PAYLOAD`
+
+Updates the payload data of the passed payload definition
+
+```
+USAGE
+  $ lrc pe [PAYLOAD]
+
+ARGUMENTS
+  PAYLOAD  Path to the payload definition json file
+
+DESCRIPTION
+  Updates the payload data of the passed payload definition
+
+ALIASES
+  $ lrc pe
+
+EXAMPLES
+  $ lrc pe payloads/example.json
+  *opens editor*
+  Type: application/json
+  {
+      "test": 123
+  }
+```
 
 ## `lrc plugins`
 
@@ -676,6 +742,41 @@ DESCRIPTION
   Update installed plugins.
 ```
 
+## `lrc pn PAYLOAD`
+
+Creates a new payload configuration file
+
+```
+USAGE
+  $ lrc pn [PAYLOAD] [-t <value>]
+
+ARGUMENTS
+  PAYLOAD  Path to the payload definition json file
+
+FLAGS
+  -t, --payloadType=<value>  Type of the payload (application/json, application/text, application/octet-stream,
+                             application/pdf)
+
+DESCRIPTION
+  Creates a new payload configuration file
+
+ALIASES
+  $ lrc pn
+
+EXAMPLES
+  $ lrc pn payloads/example.json
+  Which type of payload should be created?
+  (x) application/json
+  ( ) application/text
+  ( ) application/octet-stream
+  ( ) application/pdf
+  *opens editor*
+  Type: application/json
+  {
+      "test": 123
+  }
+```
+
 ## `lrc script execute SCRIPT`
 
 Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be used). Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
@@ -695,10 +796,35 @@ DESCRIPTION
   used). Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
 
 ALIASES
-  $ lrc exec
+  $ lrc se
 
 EXAMPLES
   $ lrc script execute ./scripts/testscript.js
+```
+
+## `lrc se SCRIPT`
+
+Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be used). Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
+
+```
+USAGE
+  $ lrc se [SCRIPT] [--loggedFields env|endpoint|endpoint_payload|req|req_body|resp|resp_body]
+
+ARGUMENTS
+  SCRIPT  Path to script that should be executed
+
+GLOBAL FLAGS
+  --loggedFields=(env|endpoint|endpoint_payload|req|req_body|resp|resp_body)...  Specify level for logging.
+
+DESCRIPTION
+  Executes a ECMA script by providing LRClient as "lrc" variable in the context of an async method (=> "await" can be
+  used). Additionally "log" can be used to log stuff like "console.log" (but this one is not working).
+
+ALIASES
+  $ lrc se
+
+EXAMPLES
+  $ lrc se ./scripts/testscript.js
 ```
 
 ## `lrc send REQUESTPATH`
@@ -755,5 +881,5 @@ EXAMPLES
   ...
 ```
 
-_See code: [dist/commands/send/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.7/dist/commands/send/index.ts)_
+_See code: [dist/commands/send/index.ts](https://github.com/lmnch/LRClient/blob/v0.0.8/dist/commands/send/index.ts)_
 <!-- commandsstop -->
