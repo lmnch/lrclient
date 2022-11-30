@@ -205,6 +205,40 @@ User-Agent: Mozilla Firefox
 // TODO: Add result
 ```
 
+## `lrc payload new PAYLOAD`
+Creates a new payload definition file at `./PAYLOAD`.
+It is possble to choose the the payload type upfront.
+Then, the editor defined in the `$EDITOR` environment variable is launched to enter the data for the payload.
+
+```
+USAGE:
+  $ lrc payload new payloads/example.json
+Which type of payload should be created?
+(x) application/json
+( ) application/text
+( ) application/octet-stream
+( ) application/pdf
+*opens editor*
+Type: application/json
+{
+    "test": 123
+}
+```
+
+## `lrc payload edit PAYLOAD`
+Edits the data of the payload definition file at `./PAYLOAD`.
+The editor defined in the `$EDITOR` environment variable is launched to enter the data for the payload.
+
+```
+USAGE:
+  $ lrc payload edit payloads/example.json
+*opens editor*
+Type: application/json
+{
+    "test": 123
+}
+```
+
 ## `lrc script execute SCRIPTFILE`
 
 Executes the ECMA script file that is located at the passed position.
