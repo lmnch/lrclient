@@ -1,5 +1,3 @@
-
-
 import ConfigManager from "./ConfigManager";
 import loadEndpoint from "../config/EndpointLoader";
 import { loadEnv as loadEnvironment } from "../config/EnvironmentLoader";
@@ -39,7 +37,7 @@ export default class LRClient {
     /**
      * Loads the config file
      */
-    async init(options: {listeners: LRCListener[]} = {listeners: []}) {
+    async init(options: { listeners: LRCListener[] } = { listeners: [] }) {
         this.config = await this.configManager.loadConfig();
         this.listeners = options.listeners;
     }
@@ -95,14 +93,14 @@ export default class LRClient {
         const request = new LRCRequest(endpoint.method, resolvedUrl, resolvedHeaders, body);
         this.logger.logRequest(request);
         const requestPromise = request.fetch()
-        this.listeners.forEach(l => l.onRequestSent(request));        
+        this.listeners.forEach(l => l.onRequestSent(request));
         const response = new LRCResponse(await requestPromise);
 
-        this.listeners.forEach(l=>l.onResponseReceived(response));
+        this.listeners.forEach(l => l.onResponseReceived(response));
         await this.logger.logResponse(response);
 
         // No variable replacement for response
-        const p = await response.extractPayload();        
+        const p = await response.extractPayload();
         return await p?.getData();
     }
 }

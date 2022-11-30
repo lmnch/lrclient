@@ -3,7 +3,7 @@ import LRClient from "../../boundary/LRClient";
 import * as vm from "node:vm";
 import * as fs from "fs/promises";
 import LRCLoggerConfig from "../../logging/LRCLoggerConfig";
-import logger = require("node-color-log");
+import * as logger from "node-color-log";
 import BaseCommand from "../BaseCommand";
 
 export default class Execute extends BaseCommand {
@@ -13,7 +13,7 @@ export default class Execute extends BaseCommand {
     static examples = [`<%= config.bin %> <%= command.id %> ./scripts/testscript.js
     `];
 
-    static aliases = ["exec"]
+    static aliases = ["se"]
 
     static args = [
         { name: 'script', description: "Path to script that should be executed", required: true }
