@@ -11,7 +11,7 @@ import * as cliSelect from 'cli-select-2';
 
 
 export default class NewPayload extends Command {
-    static description = 'Creates a new payload configuration file.'
+    static description = 'Creates a new payload configuration file'
 
     static examples = [
         `<%= config.bin %> <%= command.id %> payloads/example.json
