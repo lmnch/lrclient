@@ -1,3 +1,4 @@
+import PayloadType from "../model/PayloadType";
 import Variable from "../variables/Variable";
 import Payload from "./Payload";
 
@@ -6,7 +7,11 @@ export default class PayloadJson implements Payload {
     data: any;
 
     constructor(data: string){
-        this.data = JSON.parse(data);
+        this.setRawData(data);
+    }
+
+    setRawData(rawData: string): void {
+        this.data = JSON.parse(rawData);
     }
 
     async getData(): Promise<any> {
@@ -28,7 +33,7 @@ export default class PayloadJson implements Payload {
         return JSON.stringify(this.data);
     }
 
-    getContentTypeHeader(): string {
-        return "application/json";
+    getContentTypeHeader(): PayloadType {
+        return PayloadType.APPLICATION_JSON;
     }
 }

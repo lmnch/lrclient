@@ -1,3 +1,4 @@
+import PayloadType from "../model/PayloadType";
 import Variable from "../variables/Variable";
 import Payload from "./Payload";
 
@@ -8,6 +9,10 @@ export default class PayloadText implements Payload {
 
     constructor(data: string) {
         this.data = data;
+    }
+
+    setRawData(rawData: string): void {
+        this.data = rawData;
     }
 
     async getData(): Promise<string> {
@@ -27,8 +32,8 @@ export default class PayloadText implements Payload {
         return this.data;
     }
 
-    getContentTypeHeader(): string {
-        return "application/text";
+    getContentTypeHeader(): PayloadType {
+        return PayloadType.APPLICATION_TEXT;
     }
 
 }

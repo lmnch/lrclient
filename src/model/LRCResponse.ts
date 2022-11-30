@@ -1,5 +1,3 @@
-import internal = require("stream");
-import { threadId } from "worker_threads";
 import Payload from "../payload/Payload";
 import PayloadText from "../payload/PayloadText";
 import payloadExtractor from "../payload/SupportedPayloadExtractors";

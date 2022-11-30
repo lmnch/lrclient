@@ -9,6 +9,8 @@ import LRCLoggerConfig from "./LRCLoggerConfig";
 
 export default class LRCLogger {
 
+    static instance = new LRCLogger();
+
     loggerConfig: LRCLoggerConfig;
 
     constructor(config: LRCLoggerConfig = new LRCLoggerConfig({})) {
@@ -94,19 +96,26 @@ export default class LRCLogger {
             // Try extracting payload
             try {
                 const payload = await response.extractPayload()
-                logger.color("white").log(payload?.toString());
-                loggedPayload = true;
+                if(payload){
+                    logger.color("white").log(await payload?.getRawData(true));
+                    loggedPayload = true;
+                }
             } catch (e: any) {
                 this.logError(e.message, e);
             }
-
+            
         }
-
+        
         if (this.loggerConfig.logResponse || this.loggerConfig.logResponseBody && loggedPayload) {
             this.nl()
         }
     }
-
+    
+    async logPayload(payload: Payload){
+        logger.color("cyan").log("Type: ").joint().log(payload.getContentTypeHeader());
+        logger.color("white").log(await payload.getRawData(true));
+    }
+    
     logError(message: string | undefined, e: Error) {
         logger.bgColor("red").color("black").log(message);
         logger.color("red").log(e.message);
