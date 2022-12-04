@@ -34,7 +34,7 @@ export default class LRCLogger {
         }
     }
 
-    logEndpoint(endpointPath: string, e: Endpoint) {
+    async logEndpoint(endpointPath: string, e: Endpoint) {
         if (this.loggerConfig.logEndpoint) {
             logger.bold().underscore().color("black").log(endpointPath);
             let normalizedMethod = e.method.toString();
@@ -48,7 +48,7 @@ export default class LRCLogger {
             });
         }
         if (this.loggerConfig.logEndpointPayload && e.payload) {
-            logger.color("blue").log(e.payload.toString());
+            logger.color("blue").log(await e.payload.getRawData(true));
         }
         if (this.loggerConfig.logEndpoint || this.loggerConfig.logEndpointPayload && e.payload) {
             this.nl();
