@@ -10,7 +10,7 @@ export default class ConfigManager {
 
     configFilePath: string;
 
-    constructor(configFilePath: string = LRCConstants.CONFIG_FILE) {
+    constructor(configFilePath: string = LRCConstants.DEFAULT_CONFIG_FILE) {
         this.configFilePath = configFilePath;
     }
 
@@ -21,7 +21,7 @@ export default class ConfigManager {
      */
     async loadConfig(): Promise<LRCConfig> {
         if (existsSync(this.configFilePath)) {
-            const data = fs.readFile(this.configFilePath);
+            const data = fs.readFile(this.configFilePath);            
             return <LRCConfig>JSON.parse((await data).toString());
         }
         return new LRCConfig();

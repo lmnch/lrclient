@@ -13,6 +13,27 @@
             "hello",
             "world",
           ],
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Mocha Tests",
+        "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+        "args": [
+          "--require",
+          "${workspaceFolder}/test/helpers/init.js",
+          "--reporter",
+          "dot",
+          "--slow",
+          "5000",
+          "--colors",
+          "${workspaceFolder}/test/**/*.test.js",
+  
+        ],
+        "internalConsoleOptions": "openOnSessionStart",
+        "skipFiles": [
+          "<node_internals>/**"
+        ]
       }
   ]
 }

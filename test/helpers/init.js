@@ -1,6 +1,36 @@
+
 const path = require('path')
 process.env.TS_NODE_PROJECT = path.resolve('test/tsconfig.json')
 process.env.NODE_ENV = 'development'
 
 global.oclif = global.oclif || {}
 global.oclif.columns = 80
+
+
+
+global.fetchMock = (url, method, headers, body) => {
+    const mockInator = (mocker) => {
+        const jest = require("jest-mock");
+        global.fetch = jest.fn((pUrl, { method: pMethod, headers: pHeaders, body: pBody }) => {
+            if (url == pUrl && method == pMethod 
+                && (!headers || headers == pHeaders) 
+                && (!body || body == pBody)) {
+               return Promise.resolve(mocker);
+            }
+        });
+    };
+    return {
+        status: (status) => {
+            return {
+                json: (jsonPayload) => { 
+                     const headers = new Headers();
+                     headers.append("Content-Type", "application/json");
+                    return mockInator({ status: status,headers: headers, json: () => JSON.stringify(Promise.resolve(jsonPayload)) })
+                },
+                text: (textPaload) => mockInator({ status: status,headers: new Headers(), text: () => Promise.resolve(textPaload) })
+            }
+        }
+    }
+}
+
+process.env.LRC_CONFIG_FILE = "./test/resources/test.config"

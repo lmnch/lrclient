@@ -59,8 +59,8 @@ referrer-policy: no-referrer
   async run(): Promise<void> {
     const { args, flags } = await this.parse(Send);
 
-    const client = new LRClient(this.getLoggerConfig(flags.loggedFields));
-    await client.init();
+    const client = new LRClient(this.getLoggerConfig(flags), this.getConfigManager(flags));
+    await client.init({listeners: [this]});
 
     const localDefinition: { [key: string]: string } = {};
     const { localVariable } = flags;
@@ -71,6 +71,7 @@ referrer-policy: no-referrer
       });
     }
 
-    client.send(args.requestPath, localDefinition, flags.payload);
+    const result = await client.send(args.requestPath, localDefinition, flags.payload);
+    this.log(result)
   }
 }
