@@ -9,7 +9,6 @@ import * as fs from "fs";
 import LRCConstants from "../LRCConstants";
 import { pipeline, Writable } from "stream";
 import { promisify } from "util";
-import process = require("process");
 
 
 

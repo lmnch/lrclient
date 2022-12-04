@@ -1,5 +1,3 @@
-
-
 import ConfigManager from "./ConfigManager";
 import loadEndpoint from "../config/EndpointLoader";
 import { loadEnv as loadEnvironment } from "../config/EnvironmentLoader";
@@ -16,6 +14,9 @@ import PayloadText from "../payload/PayloadText";
 import LRCLoggerConfig from "../logging/LRCLoggerConfig";
 import PayloadType from "../model/PayloadType";
 import payloadExtractor from "../payload/SupportedPayloadExtractors";
+import LRCListener from "./LRCListener";
+import LRCRequest from "../model/LRCRequest";
+import LRCResponse from "../model/LRCResponse";
 
 /**
  * LRClient which executes the requests based on the passed config parameters.
@@ -26,6 +27,8 @@ export default class LRClient {
     config: LRCConfig = new LRCConfig();
     logger: LRCLogger;
 
+    listeners: LRCListener[] = [];
+
     constructor(loggerConfig: LRCLoggerConfig = new LRCLoggerConfig({}), configManager: ConfigManager = new ConfigManager) {
         this.configManager = configManager;
         this.logger = new LRCLogger(loggerConfig);
@@ -34,8 +37,9 @@ export default class LRClient {
     /**
      * Loads the config file
      */
-    async init() {
+    async init(options: { listeners: LRCListener[] } = { listeners: [] }) {
         this.config = await this.configManager.loadConfig();
+        this.listeners = options.listeners;
     }
 
     /**
@@ -86,34 +90,17 @@ export default class LRClient {
         }
 
         const body = await chosenPayload?.getBody(variables.variableStore);
-        this.logger.logRequest(endpoint.method, resolvedUrl, resolvedHeaders, body);
-        const response = await fetch(resolvedUrl, {
-            method: HttpMethod[endpoint.method],
-            headers: resolvedHeaders, body
-        });
-        
-        let extracted: Payload;
-        let error: any = undefined;
-        try {
-            extracted = await payloadExtractor.extractIfPossible(response);
-        } catch (e) {
-            extracted = new PayloadText("Error extracting the result!");
-            error = e;
-        }
+        const request = new LRCRequest(endpoint.method, resolvedUrl, resolvedHeaders, body);
+        this.logger.logRequest(request);
+        const requestPromise = request.fetch()
+        this.listeners.forEach(l => l.onRequestSent(request));
+        const response = new LRCResponse(await requestPromise);
 
-        // Map headers back
-        const responseHeaders: { [key: string]: string } = {};
-        response.headers.forEach((value, key) => {
-            responseHeaders[key] = value;
-        })
-
-        this.logger.logResponse(response.status, response.statusText, responseHeaders, extracted);
-
-        if (error) {
-            this.logger.logError((await extracted.getBody({}))?.toString(), <Error>error);
-        }
+        this.listeners.forEach(l => l.onResponseReceived(response));
+        await this.logger.logResponse(response);
 
         // No variable replacement for response
-        return extracted.getData({});
+        const p = await response.extractPayload();
+        return await p?.getData();
     }
 }

@@ -2,10 +2,14 @@ import * as logger from "node-color-log";
 import Endpoint from "../model/Endpoint";
 import Environment from "../model/Environment";
 import HttpMethod from "../model/HttpMethod";
+import LRCRequest from "../model/LRCRequest";
+import LRCResponse from "../model/LRCResponse";
 import Payload from "../payload/Payload";
 import LRCLoggerConfig from "./LRCLoggerConfig";
 
 export default class LRCLogger {
+
+    static instance = new LRCLogger();
 
     loggerConfig: LRCLoggerConfig;
 
@@ -30,7 +34,7 @@ export default class LRCLogger {
         }
     }
 
-    logEndpoint(endpointPath: string, e: Endpoint) {
+    async logEndpoint(endpointPath: string, e: Endpoint) {
         if (this.loggerConfig.logEndpoint) {
             logger.bold().underscore().color("black").log(endpointPath);
             let normalizedMethod = e.method.toString();
@@ -44,58 +48,74 @@ export default class LRCLogger {
             });
         }
         if (this.loggerConfig.logEndpointPayload && e.payload) {
-            logger.color("blue").log(e.payload.toString());
+            logger.color("blue").log(await e.payload.getRawData(true));
         }
         if (this.loggerConfig.logEndpoint || this.loggerConfig.logEndpointPayload && e.payload) {
             this.nl();
         }
     }
 
-    logRequest(method: HttpMethod, url: string, headers: { [key: string]: string }, body: any = "") {
+    logRequest(req: LRCRequest) {
         if (this.loggerConfig.logRequest) {
             logger.bold().underscore().color("black").log("Request:");
-            let normalizedMethod = method.toString();
+            let normalizedMethod = req.method.toString();
             while (normalizedMethod.length < 4) {
                 normalizedMethod = " " + normalizedMethod;
             }
-            logger.bgColor("magenta").color("black").log(normalizedMethod).joint().color("blue").log(" " + url);
-            Object.entries(headers).forEach(([key, header]) => {
+            logger.bgColor("magenta").color("black").log(normalizedMethod).joint().color("blue").log(" " + req.url);
+            Object.entries(req.headers).forEach(([key, header]) => {
                 logger.color("cyan").log(`${key}: ${header}`)
             });
         }
-        if (this.loggerConfig.logRequestBody && body) {
-            logger.color("blue").log(body);
+        if (this.loggerConfig.logRequestBody && req.body) {
+            logger.color("blue").log(req.body);
         }
 
-        if (this.loggerConfig.logRequest || this.loggerConfig.logRequestBody && body) {
+        if (this.loggerConfig.logRequest || this.loggerConfig.logRequestBody && req.body) {
             this.nl();
         }
     }
 
-    logResponse(status: number, statusText: string, headers: { [key: string]: string }, payload: Payload | string) {
+    async logResponse(response: LRCResponse) {
         if (this.loggerConfig.logResponse) {
             logger.bold().underscore().color("white").log("Response:");
 
-            logger.bgColor(status < 300 ? "green" :
-                status > 400 && status < 500 ? "red" :
-                    status >= 500 ? "magenta" :
+            logger.bgColor(response.status < 300 ? "green" :
+                response.status > 400 && response.status < 500 ? "red" :
+                    response.status >= 500 ? "magenta" :
                         "white")
-                .color("black").log(status).joint().color("white").log(" " + statusText);
+                .color("black").log(response.status).joint().color("white").log(" " + response.statusText);
 
-            Object.entries(headers).forEach(([key, header]) => {
+            Object.entries(response.headers).forEach(([key, header]) => {
                 logger.color("yellow").log(`${key}: ${header}`)
             });
         }
 
-        if (this.loggerConfig.logResponseBody && payload) {
-            logger.color("white").log(payload.toString());
+        let loggedPayload = false;
+        if (this.loggerConfig.logResponseBody) {
+            // Try extracting payload
+            try {
+                const payload = await response.extractPayload()
+                if(payload){
+                    logger.color("white").log(await payload?.getRawData(true));
+                    loggedPayload = true;
+                }
+            } catch (e: any) {
+                this.logError(e.message, e);
+            }
+            
         }
-
-        if (this.loggerConfig.logResponse || this.loggerConfig.logResponseBody && payload) {
+        
+        if (this.loggerConfig.logResponse || this.loggerConfig.logResponseBody && loggedPayload) {
             this.nl()
         }
     }
-
+    
+    async logPayload(payload: Payload){
+        logger.color("cyan").log("Type: ").joint().log(payload.getContentTypeHeader());
+        logger.color("white").log(await payload.getRawData(true));
+    }
+    
     logError(message: string | undefined, e: Error) {
         logger.bgColor("red").color("black").log(message);
         logger.color("red").log(e.message);
