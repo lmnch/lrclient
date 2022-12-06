@@ -1,11 +1,9 @@
 
 {
     "headers": {
-      "Authorization": "Bearer {{bearerToken}}",
-      "User-Agent": "Mozilla Firefox"
+      "Authorization": "Bearer {{bearerToken}}"
     },
     "variables": {
-      "bearerToken": "...",
       "baseUrl": "https://test.url",
       "user": "lmnch",
       "repository": "LRClient",

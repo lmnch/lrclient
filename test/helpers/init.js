@@ -25,7 +25,7 @@ global.fetchMock = (url, method, headers, body) => {
                 json: (jsonPayload) => { 
                      const headers = new Headers();
                      headers.append("Content-Type", "application/json");
-                    return mockInator({ status: status,headers: headers, json: () => JSON.stringify(Promise.resolve(jsonPayload)) })
+                    return mockInator({ status: status,headers: headers, text: () => JSON.stringify(Promise.resolve(jsonPayload)) })
                 },
                 text: (textPaload) => mockInator({ status: status,headers: new Headers(), text: () => Promise.resolve(textPaload) })
             }
