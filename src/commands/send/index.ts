@@ -83,6 +83,7 @@ referrer-policy: no-referrer
       });
     }
 
-    client.send(args.requestPath, localDefinition, flags.payload);
+    const result = await client.send(args.requestPath, localDefinition, flags.payload);
+    // this.log(result)
   }
 }

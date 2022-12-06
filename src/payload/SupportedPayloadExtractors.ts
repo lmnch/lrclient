@@ -15,11 +15,11 @@ import { promisify } from "util";
 class JsonPayloadExtractor extends PayloadExtractor {
 
     canHandle(contentType: string | null): boolean {
-        return contentType === PayloadType.APPLICATION_JSON.toString();
+        return contentType?contentType.startsWith(PayloadType.APPLICATION_JSON.toString()):false;
     }
 
     async extractResult(response: Response): Promise<Payload> {
-        return new PayloadJson(await response.json());
+        return new PayloadJson(await response.text());
     }
 
 }
