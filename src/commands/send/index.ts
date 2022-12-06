@@ -84,6 +84,6 @@ referrer-policy: no-referrer
     }
 
     const result = await client.send(args.requestPath, localDefinition, flags.payload);
-    this.log(result)
+    // this.log(result)
   }
 }
