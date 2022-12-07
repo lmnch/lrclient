@@ -12,22 +12,22 @@ global.fetchMock = (url, method, headers, body) => {
     const mockInator = (mocker) => {
         const jest = require("jest-mock");
         global.fetch = jest.fn((pUrl, { method: pMethod, headers: pHeaders, body: pBody }) => {
-            if (url == pUrl && method == pMethod 
-                && (!headers || headers == pHeaders) 
+            if (url == pUrl && method == pMethod
+                && (!headers || headers == pHeaders)
                 && (!body || body == pBody)) {
-               return Promise.resolve(mocker);
+                return Promise.resolve(mocker);
             }
         });
     };
     return {
         status: (status) => {
             return {
-                json: (jsonPayload) => { 
-                     const headers = new Headers();
-                     headers.append("Content-Type", "application/json");
-                    return mockInator({ status: status,headers: headers, text: () => JSON.stringify(Promise.resolve(jsonPayload)) })
+                json: (jsonPayload) => {
+                    const headers = new Headers();
+                    headers.append("Content-Type", "application/json");
+                    return mockInator({ status: status, headers: headers, text: () => JSON.stringify(jsonPayload), statusText: "Ok" })
                 },
-                text: (textPaload) => mockInator({ status: status,headers: new Headers(), text: () => Promise.resolve(textPaload) })
+                text: (textPaload) => mockInator({ status: status, headers: new Headers(), text: () => textPaload, statusText: "Ok" })
             }
         }
     }

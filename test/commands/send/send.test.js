@@ -32,6 +32,24 @@ describe('send', () => {
     expectNextLineToBe(output, " GET https://test.url/start");
     // Headers
     expectNextLineToBe(output, "Authorization: Bearer 3");
+    // new line
+    expectNextLineToBe(output, "");
+    // cool checkbox
+    expectNextLineToBe(output, " ✓");
+    // new line
+    expectNextLineToBe(output, "");
+    expectNextLineToBe(output, "Response:");
+    expectNextLineToBe(output, "200");
+    expectNextLineToBe(output);
+    expectNextLineToBe(output, "200 Ok");
+    expectNextLineToBe(output, "content-type: application/json");
+    expectNextLineToBe(output, "{");
+    expectNextLineToBe(output, "    \"test\": \"json\"");
+    expectNextLineToBe(output, "}");
+    expectNextLineToBe(output, "");
+    expectNextLineToBe(output, "");
+
+    expect(output.length).to.eq(0);
 
   })
 
