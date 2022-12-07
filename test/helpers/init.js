@@ -20,14 +20,14 @@ global.fetchMock = (url, method, headers, body) => {
         });
     };
     return {
-        status: (status) => {
+        status: (status, statusMessage="") => {
             return {
                 json: (jsonPayload) => {
                     const headers = new Headers();
                     headers.append("Content-Type", "application/json");
-                    return mockInator({ status: status, headers: headers, text: () => JSON.stringify(jsonPayload), statusText: "Ok" })
+                    return mockInator({ status: status, headers: headers, text: () => JSON.stringify(jsonPayload), statusText: statusMessage })
                 },
-                text: (textPaload) => mockInator({ status: status, headers: new Headers(), text: () => textPaload, statusText: "Ok" })
+                text: (textPaload) => mockInator({ status: status, headers: new Headers(), text: () => textPaload, statusText: statusMessage }),
             }
         }
     }

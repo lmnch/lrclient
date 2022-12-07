@@ -1,0 +1,6 @@
+{
+    "url": "{{baseUrl}}/start",
+    "headers": {
+        "Authorization": "Basic {{repository}}"
+    }
+}

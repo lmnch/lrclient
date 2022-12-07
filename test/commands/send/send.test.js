@@ -1,8 +1,8 @@
-const {expect, test} =require('@oclif/test');
+const { expect, test } = require('@oclif/test');
 
 const expectNextLineToBe = (outputLines, expected) => {
   expect(outputLines.length).to.be.gte(1);
-  if(expected!==undefined){
+  if (expected !== undefined) {
     const output = outputLines[0];
     expect(output).to.be.eq(expected);
   }
@@ -15,43 +15,122 @@ const expectNextLineToBe = (outputLines, expected) => {
  * 
  * The test resources are stored in test/resources.
  */
-describe('send', () => {
-  fetchMock('https://test.url/start',"GET").status(200).json({test: "json"});
-  test
-  .stdout()
-  .command(['send', 'test/resources/collections/url-start.json' , '-v', 'bearerToken: 3'])
-  .it('[test-env|url-start] should log request and response by default', ctx => {
-    const output = ctx.stdout.split("\n");
-    
-    expectNextLineToBe(output,"Request:");
-    // Two not really displayed lines because of color logger
-    // => ignore
-    expectNextLineToBe(output);
-    expectNextLineToBe(output);
-    // Endpoint
-    expectNextLineToBe(output, " GET https://test.url/start");
-    // Headers
-    expectNextLineToBe(output, "Authorization: Bearer 3");
-    // new line
-    expectNextLineToBe(output, "");
-    // cool checkbox
-    expectNextLineToBe(output, " ✓");
-    // new line
-    expectNextLineToBe(output, "");
-    expectNextLineToBe(output, "Response:");
-    expectNextLineToBe(output, "200");
-    expectNextLineToBe(output);
-    expectNextLineToBe(output, "200 Ok");
-    expectNextLineToBe(output, "content-type: application/json");
-    expectNextLineToBe(output, "{");
-    expectNextLineToBe(output, "    \"test\": \"json\"");
-    expectNextLineToBe(output, "}");
-    expectNextLineToBe(output, "");
-    expectNextLineToBe(output, "");
+describe('send-200', () => {
 
-    expect(output.length).to.eq(0);
-
+  before(()=>{
+    fetchMock('https://test.url/start', "GET").status(200, "Ok").json({ test: "json" });
   })
+
+  test
+    .stdout()
+    .command(['send', 'test/resources/collections/url-start.json', '-v', 'bearerToken: 3'])
+    .it('[test-env|url-start] should log request and response by default', ctx => {
+      const output = ctx.stdout.split("\n");
+
+      expectNextLineToBe(output, "Request:");
+      // Two not really displayed lines because of color logger
+      // => ignore
+      expectNextLineToBe(output);
+      expectNextLineToBe(output);
+      // Endpoint
+      expectNextLineToBe(output, " GET https://test.url/start");
+      // Headers
+      expectNextLineToBe(output, "Authorization: Bearer 3");
+      // new line
+      expectNextLineToBe(output, "");
+      // cool checkbox
+      expectNextLineToBe(output, " ✓");
+      // new line
+      expectNextLineToBe(output, "");
+      expectNextLineToBe(output, "Response:");
+      expectNextLineToBe(output, "200");
+      expectNextLineToBe(output);
+      expectNextLineToBe(output, "200 Ok");
+      expectNextLineToBe(output, "content-type: application/json");
+      expectNextLineToBe(output, "{");
+      expectNextLineToBe(output, "    \"test\": \"json\"");
+      expectNextLineToBe(output, "}");
+      expectNextLineToBe(output, "");
+      expectNextLineToBe(output, "");
+
+      expect(output.length).to.eq(0);
+    });
+
+  test
+    .stdout()
+    .command(['send', 'test/resources/collections/url-start-header.json'])
+    .it('[test-env|url-start-header] should overwrite endpoint header with environment variable', ctx => {
+      const output = ctx.stdout.split("\n");
+
+      expectNextLineToBe(output, "Request:");
+      // Two not really displayed lines because of color logger
+      // => ignore
+      expectNextLineToBe(output);
+      expectNextLineToBe(output);
+      // Endpoint
+      expectNextLineToBe(output, " GET https://test.url/start");
+      // Headers
+      expectNextLineToBe(output, "Authorization: Basic LRClient");
+      // new line
+      expectNextLineToBe(output, "");
+      // cool checkbox
+      expectNextLineToBe(output, "Sending request... ✓");
+      // new line
+      expectNextLineToBe(output, "");
+      expectNextLineToBe(output, "Response:");
+      expectNextLineToBe(output, "200");
+      expectNextLineToBe(output);
+      expectNextLineToBe(output, "200 Ok");
+      expectNextLineToBe(output, "content-type: application/json");
+      expectNextLineToBe(output, "{");
+      expectNextLineToBe(output, "    \"test\": \"json\"");
+      expectNextLineToBe(output, "}");
+      expectNextLineToBe(output, "");
+      expectNextLineToBe(output, "");
+
+      expect(output.length).to.eq(0);
+    });
+});
+
+describe("send-403", () => {
+  before(()=>{
+    fetchMock('https://test.url/start', "GET").status(403, "Forbidden").json({});
+  })
+
+  test
+    .stdout()
+    .command(['send', 'test/resources/collections/url-start-header.json'])
+    .it('[test-env|url-start-header] should overwrite endpoint header with environment variable', ctx => {
+      const output = ctx.stdout.split("\n");
+
+      expectNextLineToBe(output, "Request:");
+      // Two not really displayed lines because of color logger
+      // => ignore
+      expectNextLineToBe(output);
+      expectNextLineToBe(output);
+      // Endpoint
+      expectNextLineToBe(output, " GET https://test.url/start");
+      // Headers
+      expectNextLineToBe(output, "Authorization: Basic LRClient");
+      // new line
+      expectNextLineToBe(output, "");
+      // cool checkbox
+      expectNextLineToBe(output, "Sending request... ✓");
+      // new line
+      expectNextLineToBe(output, "");
+      expectNextLineToBe(output, "Response:");
+      expectNextLineToBe(output, "403");
+      expectNextLineToBe(output);
+      expectNextLineToBe(output, "403 Forbidden");
+      expectNextLineToBe(output, "content-type: application/json");
+      expectNextLineToBe(output, "{}");
+      expectNextLineToBe(output, "");
+      expectNextLineToBe(output, "");
+
+      expect(output.length).to.eq(0);
+    });
+
+})
 
   // test
   // .nock('https://api.heroku.com', api => api
@@ -63,4 +142,3 @@ describe('send', () => {
   // // checks to ensure the command exits with status 100
   // .exit(100)
   // .it('exits with status 100 when not logged in')
-})
