@@ -90,6 +90,39 @@ describe('send-200', () => {
 
       expect(output.length).to.eq(0);
     });
+
+    test
+      .stdout()
+      .command(['send', 'test/resources/collections/url-start-header.json', '-l', "endpoint", "-l", 'env'])
+      .it('[test-env|url-start-header] should log endpoint and env if configured', ctx => {
+        const output = ctx.stdout.split("\n");
+  
+
+        expectNextLineToBe(output, "./test/resources/environments/test-env-1.json");
+        expectNextLineToBe(output, "Headers:");
+        expectNextLineToBe(output, "Authorization: Bearer {{bearerToken}}");
+        expectNextLineToBe(output, "Variables:");
+        expectNextLineToBe(output, "baseUrl=https://test.url");
+        expectNextLineToBe(output, "user=lmnch");
+        expectNextLineToBe(output, "repository=LRClient");
+        expectNextLineToBe(output, "requestUrl={{baseUrl}}/{{user}}/{{repository}}");
+        expectNextLineToBe(output, "");
+        expectNextLineToBe(output, "test/resources/collections/url-start-header.json");
+        // Two not really displayed lines because of color logger
+        // => ignore
+        expectNextLineToBe(output);
+        expectNextLineToBe(output);
+        expectNextLineToBe(output, " GET {{baseUrl}}/start");
+        expectNextLineToBe(output, "Authorization: Basic {{repository}}");
+        expectNextLineToBe(output, "");
+        // Always printed because not directly part of the logger
+        expectNextLineToBe(output, "Sending request... ✓");
+        expectNextLineToBe(output, "");
+        expectNextLineToBe(output, "");
+  
+        expect(output.length).to.eq(0);
+      });
+
 });
 
 describe("send-403", () => {
@@ -129,8 +162,8 @@ describe("send-403", () => {
 
       expect(output.length).to.eq(0);
     });
+});
 
-})
 
   // test
   // .nock('https://api.heroku.com', api => api
