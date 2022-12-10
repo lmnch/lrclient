@@ -19,7 +19,7 @@
   "dependencies": {
     "@oclif/core": "^1.19.1",
     "@oclif/plugin-help": "^5",
-    "@oclif/plugin-plugins": "^2.1.5",
+    "@oclif/plugin-plugins": "^2.1.8",
     "cli-select-2": "^2.0.0",
     "node-color-log": "^10.0.2",
     "node-fetch": "^3.2.10"
