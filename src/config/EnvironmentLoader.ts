@@ -38,7 +38,7 @@ class EnvironmentConfig {
  * @param envPath path to the json file which should be parsed to an environment
  * @returns Parsed environment
  */
-export async function loadEnv(envPath: string): Promise<Environment> {
+export async function loadEnvironment(envPath: string): Promise<Environment> {
     const data = await fs.readFile(envPath);
     return EnvironmentConfig.toEnvironment(<EnvironmentConfig>JSON.parse(data.toString()));
 }

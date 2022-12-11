@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "importHelpers": true,
-    "module": "commonjs",
-    "outDir": "dist",
+    "target": "es6",                          
+    "module": "commonjs",                    
+    "lib": ["es6", "dom"],                     
+    "allowJs": false,
+    "outDir": "dist",                          
     "rootDir": "src",
-    "strict": true,
-    "target": "es2019"
+    "strict": true,         
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "declaration": true
   },
   "include": [
-    "src/**/*"
+    "./src"
   ]
 }

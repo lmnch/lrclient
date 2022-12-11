@@ -2,7 +2,7 @@ import LRCConstants from "../LRCConstants";
 import Endpoint from "../model/Endpoint";
 import * as fs from 'fs/promises';
 import HttpMethod from "../model/HttpMethod";
-import PayloadType from "../model/PayloadType";
+import PayloadType from "../payload/PayloadType";
 import Variable from "../variables/Variable";
 import VariableManager from "../variables/VariableManager";
 import { loadPayload } from "./PayloadLoader";

@@ -1,6 +1,6 @@
-import ConfigManager from "./ConfigManager";
+import ConfigManager from "../config/ConfigManager";
 import loadEndpoint from "../config/EndpointLoader";
-import { loadEnv as loadEnvironment } from "../config/EnvironmentLoader";
+import { loadEnvironment as loadEnvironment } from "../config/EnvironmentLoader";
 import supportedResultExtractors from "../payload/SupportedPayloadExtractors";
 import LRCConstants from "../LRCConstants";
 import HttpMethod from "../model/HttpMethod";
@@ -12,7 +12,7 @@ import Payload from "../payload/Payload";
 import { loadPayload } from "../config/PayloadLoader";
 import PayloadText from "../payload/PayloadText";
 import LRCLoggerConfig from "../logging/LRCLoggerConfig";
-import PayloadType from "../model/PayloadType";
+import PayloadType from "../payload/PayloadType";
 import payloadExtractor from "../payload/SupportedPayloadExtractors";
 import LRCListener from "./LRCListener";
 import LRCRequest from "../model/LRCRequest";

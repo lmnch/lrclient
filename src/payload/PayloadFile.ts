@@ -1,7 +1,7 @@
 import Payload from "./Payload";
 import * as fs from "fs/promises";
 import Variable from "../variables/Variable";
-import PayloadType from "../model/PayloadType";
+import PayloadType from "./PayloadType";
 
 export default class PayloadFile implements Payload {
 

@@ -1,4 +1,4 @@
-import PayloadType from "../model/PayloadType";
+import PayloadType from "./PayloadType";
 import Variable from "../variables/Variable";
 
 export default interface Payload {

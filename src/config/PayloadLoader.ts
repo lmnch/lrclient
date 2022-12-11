@@ -1,6 +1,6 @@
 import * as fs from "fs/promises";
 import LRCConstants from "../LRCConstants";
-import PayloadType from "../model/PayloadType";
+import PayloadType from "../payload/PayloadType";
 import Payload from "../payload/Payload";
 import PayloadFile from "../payload/PayloadFile";
 import PayloadJson from "../payload/PayloadJson";

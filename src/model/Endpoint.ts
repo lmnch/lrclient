@@ -2,7 +2,7 @@ import Payload from "../payload/Payload";
 import Variable from "../variables/Variable";
 import VariableManager from "../variables/VariableManager";
 import HttpMethod from "./HttpMethod";
-import PayloadType from "./PayloadType";
+import PayloadType from "../payload/PayloadType";
 
 
 /**

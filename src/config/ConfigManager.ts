@@ -1,7 +1,7 @@
 import * as fs from "fs/promises";
 import { existsSync } from "fs";
 import LRCConstants from "../LRCConstants";
-import LRCConfig from "../config/LRCConfig";
+import LRCConfig from "./LRCConfig";
 
 /**
  * Can be used to manage the config for the rest client.
@@ -10,7 +10,7 @@ export default class ConfigManager {
 
     configFilePath: string;
 
-    constructor(configFilePath: string = LRCConstants.CONFIG_FILE) {
+    constructor(configFilePath: string = LRCConstants.DEFAULT_CONFIG_FILE) {
         this.configFilePath = configFilePath;
     }
 
