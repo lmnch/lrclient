@@ -1,0 +1,5 @@
+{
+    "url": "{{baseUrl}}/upload",
+    "method": "POST",
+    "payload": "test/resources/payloads/test-upload-payload.json"
+}

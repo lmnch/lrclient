@@ -8,16 +8,15 @@ global.oclif.columns = 80
 
 
 
-global.fetchMock = (url, method, headers, body) => {
+global.fetchMock = (urlThat, methodThat, headersThat, bodyThat) => {
     const mockInator = (mocker) => {
-        const jest = require("jest-mock");
-        global.fetch = jest.fn((pUrl, { method: pMethod, headers: pHeaders, body: pBody }) => {
-            if (url == pUrl && method == pMethod
-                && (!headers || headers == pHeaders)
-                && (!body || body == pBody)) {
+        global.fetch = (pUrl, { method: pMethod, headers: pHeaders, body: pBody }) => {
+            if (urlThat(pUrl) && methodThat(pMethod)
+                && (!headersThat || headersThat(pHeaders))
+                && (!bodyThat || bodyThat(pBody))) {
                 return Promise.resolve(mocker);
             }
-        });
+        };
     };
     return {
         status: (status, statusMessage="") => {
