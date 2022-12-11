@@ -1,5 +1,5 @@
 
-import PayloadType from "./PayloadType";
+import PayloadType from "../model/PayloadType";
 import Payload from "./Payload";
 import PayloadExtractor from "./PayloadExtractor";
 import PayloadFile from "./PayloadFile";

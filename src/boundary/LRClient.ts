@@ -12,7 +12,7 @@ import Payload from "../payload/Payload";
 import { loadPayload } from "../config/PayloadLoader";
 import PayloadText from "../payload/PayloadText";
 import LRCLoggerConfig from "../logging/LRCLoggerConfig";
-import PayloadType from "../payload/PayloadType";
+import PayloadType from "../model/PayloadType";
 import payloadExtractor from "../payload/SupportedPayloadExtractors";
 import LRCListener from "./LRCListener";
 import LRCRequest from "../model/LRCRequest";

@@ -1,4 +1,4 @@
-import * as logger from "node-color-log";
+import chalk from 'chalk';
 import Endpoint from "../model/Endpoint";
 import Environment from "../model/Environment";
 import HttpMethod from "../model/HttpMethod";
@@ -7,6 +7,7 @@ import LRCResponse from "../model/LRCResponse";
 import Payload from "../payload/Payload";
 import LRCLoggerConfig from "./LRCLoggerConfig";
 
+const log = console.log;
 export default class LRCLogger {
 
     static instance = new LRCLogger();
@@ -19,15 +20,15 @@ export default class LRCLogger {
 
     logEnvironment(environmentKey: string, e: Environment) {
         if (this.loggerConfig.logEnvironments) {
-            logger.bold().underscore().log(environmentKey);
-            logger.bold().log("Headers:");
+            log(chalk.bold.underline(environmentKey));
+            log(chalk.bold("Headers:"));
             Object.entries(e.headers).forEach(([key, variable]) => {
-                logger.color("green").log(`${key}: ${variable.value}`)
+                log(chalk.green(`${key}: ${variable.value}`));
             });
 
-            logger.bold().log("Variables:");
+            log(chalk.bold("Variables:"));
             Object.entries(e.variableScope.variableStore).forEach(([key, variable]) => {
-                logger.color("green").log(`${key}=${variable.value}`);
+                log(chalk.green(`${key}=${variable.value}`));
             });
 
             this.nl();
@@ -36,19 +37,19 @@ export default class LRCLogger {
 
     async logEndpoint(endpointPath: string, e: Endpoint) {
         if (this.loggerConfig.logEndpoint) {
-            logger.bold().underscore().color("black").log(endpointPath);
+            log(chalk.bold.underline.black(endpointPath));
             let normalizedMethod = e.method.toString();
             while (normalizedMethod.length < 4) {
                 normalizedMethod = " " + normalizedMethod;
             }
-            logger.bgColor("magenta").color("black").log(normalizedMethod).joint().color("blue").log(" " + e.url.value);
+            log(chalk.bgMagenta.black(normalizedMethod), chalk.blue(e.url.value));
 
             Object.entries(e.headers).forEach(([key, variable]) => {
-                logger.color("cyan").log(`${key}: ${variable.value}`)
+                log(chalk.cyan(`${key}: ${variable.value}`));
             });
         }
         if (this.loggerConfig.logEndpointPayload && e.payload) {
-            logger.color("blue").log(await e.payload.getRawData(true));
+            log(chalk.blue(await e.payload.getRawData(true)));
         }
         if (this.loggerConfig.logEndpoint || this.loggerConfig.logEndpointPayload && e.payload) {
             this.nl();
@@ -57,18 +58,18 @@ export default class LRCLogger {
 
     logRequest(req: LRCRequest) {
         if (this.loggerConfig.logRequest) {
-            logger.bold().underscore().color("black").log("Request:");
+            log(chalk.bold.underline.black("Request:"));
             let normalizedMethod = req.method.toString();
             while (normalizedMethod.length < 4) {
                 normalizedMethod = " " + normalizedMethod;
             }
-            logger.bgColor("magenta").color("black").log(normalizedMethod).joint().color("blue").log(" " + req.url);
+            log(chalk.bgMagenta.black(normalizedMethod), chalk.blue(req.url));
             Object.entries(req.headers).forEach(([key, header]) => {
-                logger.color("cyan").log(`${key}: ${header}`)
+                log(chalk.cyan(`${key}: ${header}`));
             });
         }
         if (this.loggerConfig.logRequestBody && req.body) {
-            logger.color("blue").log(req.body);
+            log(chalk.blue(req.body));
         }
 
         if (this.loggerConfig.logRequest || this.loggerConfig.logRequestBody && req.body) {
@@ -78,16 +79,16 @@ export default class LRCLogger {
 
     async logResponse(response: LRCResponse) {
         if (this.loggerConfig.logResponse) {
-            logger.bold().underscore().color("white").log("Response:");
+            log(chalk.bold.underline.white("Response:"));
 
-            logger.bgColor(response.status < 300 ? "green" :
-                response.status > 400 && response.status < 500 ? "red" :
-                    response.status >= 500 ? "magenta" :
-                        "white")
-                .color("black").log(response.status).joint().color("white").log(" " + response.statusText);
+            const bg = response.status < 300 ? chalk.green :
+                response.status > 400 && response.status < 500 ? chalk.red :
+                    response.status >= 500 ? chalk.magenta :
+                        chalk.white;
+            log(bg.black(response.status), chalk.white( response.statusText));
 
             Object.entries(response.headers).forEach(([key, header]) => {
-                logger.color("yellow").log(`${key}: ${header}`)
+                log(chalk.yellow(`${key}: ${header}`));
             });
         }
 
@@ -96,35 +97,35 @@ export default class LRCLogger {
             // Try extracting payload
             try {
                 const payload = await response.extractPayload()
-                if(payload){
-                    logger.color("white").log(await payload?.getRawData(true));
+                if (payload) {
+                    log(chalk.white(await payload?.getRawData(true)));
                     loggedPayload = true;
                 }
             } catch (e: any) {
                 this.logError(e.message, e);
             }
-            
+
         }
-        
+
         if (this.loggerConfig.logResponse || this.loggerConfig.logResponseBody && loggedPayload) {
             this.nl()
         }
     }
-    
-    async logPayload(payload: Payload){
-        logger.color("cyan").log("Type: ").joint().log(payload.getContentTypeHeader());
-        logger.color("white").log(await payload.getRawData(true));
+
+    async logPayload(payload: Payload) {
+        log(chalk.cyan("Type: "), chalk.white(payload.getContentTypeHeader()));
+        log(chalk.white(await payload.getRawData(true)));
     }
-    
+
     logError(message: string | undefined, e: Error) {
-        logger.bgColor("red").color("black").log(message);
-        logger.color("red").log(e.message);
-        logger.color("red").log(e.stack);
+        log(chalk.bgRed.black(message));
+        log(chalk.red(e.message));
+        log(chalk.red(e.stack));
         this.nl();
     }
 
     nl() {
-        logger.log();
+        log();
     }
 
 };
