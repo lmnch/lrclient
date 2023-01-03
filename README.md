@@ -1,12 +1,11 @@
 LRestClient
 =================
 
-Command-line, json-based REST-Client written in Typescript.
+Json-file-based REST-Client written in Typescript.
 
 * [Usage](#usage)
 * [Definitions](#definitions)
 * [Project Structure](#project-structure)
-* [All commands (generated)](#all-commands-generated)
 
 # Usage
 
