@@ -1,5 +1,5 @@
 import ConfigManager from "../config/ConfigManager";
-import loadEndpoint from "../config/EndpointLoader";
+import { loadEndpoint } from "../config/EndpointLoader";
 import { loadEnvironment as loadEnvironment } from "../config/EnvironmentLoader";
 import supportedResultExtractors from "../payload/SupportedPayloadExtractors";
 import LRCConstants from "../LRCConstants";

@@ -5,18 +5,18 @@ import PayloadType from "../model/PayloadType";
 
 export default class PayloadFile implements Payload {
 
-    path: string;
+    payloadPath: string;
 
-    constructor(path: string) {
-        this.path = path;
+    constructor(payloadPath: string) {
+        this.payloadPath = payloadPath;
     }
 
     setRawData(rawData: string): void {
-        this.path = rawData;
+        this.payloadPath = rawData;
     }
 
     async getData(): Promise<string> {
-        return this.path;
+        return this.payloadPath;
     }
 
     getRawData(formatted: boolean): Promise<string> {
@@ -25,12 +25,12 @@ export default class PayloadFile implements Payload {
     }
 
     async getBody(variableScope: { [key: string]: Variable }): Promise<any> {
-        // Resolve variables in path
-        return fs.readFile(new Variable("payloaPath", (await this.getData())).resolve(variableScope).value, {});
+        // Resolve variables in payloadPath
+        return fs.readFile(new Variable("payloadPath", (await this.getData())).resolve(variableScope).value, {});
     }
 
     toString(): string {
-        return `[FILE] ${this.path}`;
+        return `[FILE] ${this.payloadPath}`;
     }
 
     getContentTypeHeader(): PayloadType {
