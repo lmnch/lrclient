@@ -18,7 +18,7 @@
   "repository": "lmnch/LRClient",
   "dependencies": {
     "chalk": "4.1.2",
-    "node-fetch": "^3.2.10"
+    "node-fetch": "^3.3.0"
   },
   "devDependencies": {
     "@types/node": "^16.11.68",
