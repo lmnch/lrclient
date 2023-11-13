@@ -4,4 +4,12 @@ import { loadEnvironment } from "./EnvironmentLoader";
 import LRCConfig from "./LRCConfig";
 import { loadPayload, storePayload } from "./PayloadLoader";
 
-export { LRCConfig, loadEndpoint, storeEndpoint, loadEnvironment, loadPayload, storePayload, ConfigManager };
+export {
+    LRCConfig,
+    loadEndpoint,
+    storeEndpoint,
+    loadEnvironment,
+    loadPayload,
+    storePayload,
+    ConfigManager,
+};

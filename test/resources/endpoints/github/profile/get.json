@@ -1,0 +1,8 @@
+{
+    "url": "https://www.github.com/{{username}}",
+    "method": "GET",
+    "headers": { },
+    "variables": {
+      "username": "lmnch"
+    }
+}

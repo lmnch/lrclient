@@ -1,4 +1,3 @@
-
 import HttpMethod from "./HttpMethod";
 
 /**
@@ -12,7 +11,7 @@ export default class LRCRequest {
     headers: { [key: string]: string };
     body: BodyInit | null | undefined;
 
-    constructor(method: HttpMethod, url: string, headers: { [key: string]: string }, body: BodyInit | null | undefined) {
+    constructor(method: HttpMethod, url: string, headers: { [key: string]: string }, body: BodyInit | null | undefined = undefined) {
         this.method = method;
         this.url = url;
         this.headers = headers;
@@ -20,9 +19,15 @@ export default class LRCRequest {
     }
 
     async fetch(): Promise<Response> {
-        return await fetch(this.url, {
+        const response = await fetch(this.url, {
             method: HttpMethod[this.method],
             headers: this.headers, body: this.body
-        })
+        });
+
+        if(!response.ok){
+            throw new Error(`${response.status} ${response.statusText}`);
+        }
+
+        return response;
     }
 }

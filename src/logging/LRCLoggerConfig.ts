@@ -1,7 +1,4 @@
-
-
 export default class LRCLoggerConfig {
-
     logEndpoint: boolean;
     logEndpointPayload: boolean;
     logEnvironments: boolean;
@@ -10,7 +7,15 @@ export default class LRCLoggerConfig {
     logResponse: boolean;
     logResponseBody: boolean;
 
-    constructor({ logEndpoint = false, logEndpointPayload= false, logEnvironments = false, logRequest = true, logRequestBody = true, logResponse = true, logResponseBody = true }) {
+    constructor({
+        logEndpoint = false,
+        logEndpointPayload = false,
+        logEnvironments = false,
+        logRequest = true,
+        logRequestBody = true,
+        logResponse = true,
+        logResponseBody = true,
+    }) {
         this.logEndpoint = logEndpoint;
         this.logEndpointPayload = logEndpointPayload;
         this.logEnvironments = logEnvironments;

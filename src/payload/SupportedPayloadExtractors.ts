@@ -1,4 +1,3 @@
-
 import PayloadType from "../model/PayloadType";
 import Payload from "./Payload";
 import PayloadExtractor from "./PayloadExtractor";
@@ -7,21 +6,17 @@ import PayloadJson from "./PayloadJson";
 import PayloadText from "./PayloadText";
 import * as fs from "fs";
 import LRCConstants from "../LRCConstants";
-import { pipeline, Writable } from "stream";
-import { promisify } from "util";
-
-
 
 class JsonPayloadExtractor extends PayloadExtractor {
-
     canHandle(contentType: string | null): boolean {
-        return contentType?contentType.startsWith(PayloadType.APPLICATION_JSON.toString()):false;
+        return contentType
+            ? contentType.startsWith(PayloadType.APPLICATION_JSON.toString())
+            : false;
     }
 
     async extractResult(response: Response): Promise<Payload> {
         return new PayloadJson(await response.text());
     }
-
 }
 
 const pipeFile = new WritableStream({
@@ -32,18 +27,23 @@ const pipeFile = new WritableStream({
 
 class FilePayloadExtractor extends PayloadExtractor {
     canHandle(contentType: string | null): boolean {
-        return contentType != null
-            && [PayloadType.APPLICATION_OCTET_STREAM.toString(), PayloadType.APPLICATION_PDF.toString()].includes(contentType);
+        return (
+            contentType != null &&
+            [
+                PayloadType.APPLICATION_OCTET_STREAM.toString(),
+                PayloadType.APPLICATION_PDF.toString(),
+            ].includes(contentType)
+        );
     }
     async extractResult(response: Response): Promise<PayloadFile> {
-        const body = await response.body;
+        const body = response.body;
         body?.pipeTo(pipeFile);
         return new PayloadFile(LRCConstants.TEMP_DOWNLOAD_FILE);
     }
-
 }
+
 class TextPayloadExtractor extends PayloadExtractor {
-    canHandle(contentType: string | null): boolean {
+    canHandle(): boolean {
         return true;
     }
     async extractResult(arg0: Response): Promise<Payload> {

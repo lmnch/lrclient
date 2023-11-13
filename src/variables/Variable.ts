@@ -1,11 +1,9 @@
-
-const VARIABLE_PATTERN = /{{([A-Za-z]\w*)}}/gm;;
+const VARIABLE_PATTERN = /{{([A-Za-z]\w*)}}/gm;
 
 /**
- * Variable 
+ * Variable
  */
 export default class Variable {
-
     key: string;
     value: string;
 
@@ -16,7 +14,7 @@ export default class Variable {
 
     /**
      * Searches other variable keys in the value of this variable.
-     * 
+     *
      * @returns All keys of variables that are used in the value of this variable
      */
     getDependenciesKeys(): string[] {
@@ -38,7 +36,7 @@ export default class Variable {
 
     /**
      * Replaces all other variables in the value of this variable
-     * 
+     *
      * @param scope other variables that should be used for replacement.
      * @returns copy of the variable but with resolved value
      */
@@ -51,7 +49,6 @@ export default class Variable {
         // replace first "layer"
         let newValue = this.value;
         for (const key of this.getDependenciesKeys()) {
-            
             if (!scope[key]) {
                 throw new Error("Variable " + key + " not defined in scope!");
             }
@@ -60,8 +57,12 @@ export default class Variable {
         }
 
         // Nothing could be replaced => all variables are unresolvable
-        if(newValue === this.value){
-            throw new Error(`Variables ${this.getDependenciesKeys().join(",") } in ${this.key} could not be resolved.`);
+        if (newValue === this.value) {
+            throw new Error(
+                `Variables ${this.getDependenciesKeys().join(",")} in ${
+                    this.key
+                } could not be resolved.`
+            );
         }
 
         // resolve next layers

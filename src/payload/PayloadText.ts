@@ -2,9 +2,7 @@ import PayloadType from "../model/PayloadType";
 import Variable from "../variables/Variable";
 import Payload from "./Payload";
 
-
 export default class PayloadText implements Payload {
-
     data: string;
 
     constructor(data: string) {
@@ -19,13 +17,15 @@ export default class PayloadText implements Payload {
         return this.data;
     }
 
-    getRawData(formatted: boolean): Promise<string> {
+    getRawData(): Promise<string> {
         // Pure string => return unformatted
         return this.getData();
     }
 
     async getBody(variableScope: { [key: string]: Variable }): Promise<any> {
-        return new Variable("payload", (await this.getData())).resolve(variableScope);
+        return new Variable("payload", await this.getData()).resolve(
+            variableScope
+        );
     }
 
     toString(): string {
@@ -35,5 +35,4 @@ export default class PayloadText implements Payload {
     getContentTypeHeader(): PayloadType {
         return PayloadType.APPLICATION_TEXT;
     }
-
 }

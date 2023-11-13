@@ -3,10 +3,9 @@ import Variable from "../variables/Variable";
 import Payload from "./Payload";
 
 export default class PayloadJson implements Payload {
-
     data: any;
 
-    constructor(data: string){
+    constructor(data: string) {
         this.setRawData(data);
     }
 
@@ -19,14 +18,17 @@ export default class PayloadJson implements Payload {
     }
 
     async getRawData(formatted: boolean = false): Promise<string> {
-        if(formatted){
+        if (formatted) {
             return JSON.stringify(this.data, null, 4);
         }
-        return JSON.stringify(this.data)
+        return JSON.stringify(this.data);
     }
 
     async getBody(variableScope: { [key: string]: Variable }): Promise<string> {
-        return new Variable("payload", JSON.stringify(await this.getData())).resolve(variableScope).value;
+        return new Variable(
+            "payload",
+            JSON.stringify(await this.getData())
+        ).resolve(variableScope).value;
     }
 
     toString(): string {

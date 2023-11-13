@@ -4,11 +4,12 @@ import PayloadFile from "./PayloadFile";
 import PayloadJson from "./PayloadJson";
 import PayloadText from "./PayloadText";
 
-
 export interface ConfiguredPayload extends ConfiguredEntity, Payload {}
 
-export class ConfiguredPayloadFile extends PayloadFile implements ConfiguredPayload {
-
+export class ConfiguredPayloadFile
+    extends PayloadFile
+    implements ConfiguredPayload
+{
     path: string;
 
     constructor(path: string, payloadPath: string) {
@@ -16,15 +17,15 @@ export class ConfiguredPayloadFile extends PayloadFile implements ConfiguredPayl
         this.path = path;
     }
 
-
     getConfigPath(): string {
         return this.path;
     }
-
 }
 
-export class ConfiguredPayloadJson extends PayloadJson implements ConfiguredPayload {
-
+export class ConfiguredPayloadJson
+    extends PayloadJson
+    implements ConfiguredPayload
+{
     path: string;
 
     constructor(path: string, jsonData: string) {
@@ -32,15 +33,15 @@ export class ConfiguredPayloadJson extends PayloadJson implements ConfiguredPayl
         this.path = path;
     }
 
-
     getConfigPath(): string {
         return this.path;
     }
-
 }
 
-export class ConfiguredPayloadText extends PayloadText implements ConfiguredPayload {
-
+export class ConfiguredPayloadText
+    extends PayloadText
+    implements ConfiguredPayload
+{
     path: string;
 
     constructor(path: string, payloadText: string) {
@@ -48,9 +49,7 @@ export class ConfiguredPayloadText extends PayloadText implements ConfiguredPayl
         this.path = path;
     }
 
-
     getConfigPath(): string {
         return this.path;
     }
-
 }

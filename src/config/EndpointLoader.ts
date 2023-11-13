@@ -1,8 +1,6 @@
-import LRCConstants from "../LRCConstants";
 import Endpoint from "../model/Endpoint";
-import * as fs from 'fs/promises';
+import * as fs from "fs/promises";
 import HttpMethod from "../model/HttpMethod";
-import PayloadType from "../model/PayloadType";
 import Variable from "../variables/Variable";
 import VariableManager from "../variables/VariableManager";
 import { loadPayload } from "./PayloadLoader";
@@ -17,7 +15,9 @@ class EndpointConfig {
 
     payload: string | undefined;
 
-    static _mapHeaders(headers: { [name: string]: string }): { [key: string]: Variable } {
+    static _mapHeaders(headers: { [name: string]: string }): {
+        [key: string]: Variable
+    } {
         const mapped: { [key: string]: Variable } = {};
         for (const key in headers) {
             if (Object.prototype.hasOwnProperty.call(headers, key)) {
@@ -35,7 +35,13 @@ class EndpointConfig {
         if (ec.payload) {
             payload = await loadPayload(ec.payload);
         }
-        return new Endpoint(new Variable("url", ec.url), method, EndpointConfig._mapHeaders(ec.headers), new VariableManager(ec.variables), payload);
+        return new Endpoint(
+            new Variable("url", ec.url),
+            method,
+            EndpointConfig._mapHeaders(ec.headers),
+            new VariableManager(ec.variables),
+            payload
+        );
     }
 
     static async fromEndpoint(e: Endpoint): Promise<EndpointConfig> {
@@ -43,12 +49,12 @@ class EndpointConfig {
         ec.url = e.url.value;
         ec.method = e.method;
         ec.headers = {};
-        Object.entries(e.headers).forEach(e => {
+        Object.entries(e.headers).forEach((e) => {
             const [key, variable] = e;
             ec.headers[key] = variable.value;
         });
         ec.variables = {};
-        Object.entries(e.variableScope.variableStore).forEach(e => {
+        Object.entries(e.variableScope.variableStore).forEach((e) => {
             const [key, variable] = e;
             ec.variables[key] = variable.value;
         });
@@ -59,13 +65,15 @@ class EndpointConfig {
 
 /**
  * Loads an endpoint from disk.
- * 
+ *
  * @param endpointPath relative or absolute path for the endpoint
  * @returns The endpoint parsed from JSON
  */
 export async function loadEndpoint(endpointPath: string): Promise<Endpoint> {
     const data = await fs.readFile(endpointPath);
-    return EndpointConfig.toEndpoint(<EndpointConfig>JSON.parse(data.toString()));
+    return EndpointConfig.toEndpoint(
+        <EndpointConfig>JSON.parse(data.toString())
+    );
 }
 
 export async function storeEndpoint(endpointPath: string, endpoint: Endpoint) {
@@ -73,8 +81,13 @@ export async function storeEndpoint(endpointPath: string, endpoint: Endpoint) {
 
     if (pathParts.length > 1) {
         // Try to create missing directories
-        await fs.mkdir(pathParts.slice(0, pathParts.length - 1).join(sep), { recursive: true });
+        await fs.mkdir(pathParts.slice(0, pathParts.length - 1).join(sep), {
+            recursive: true,
+        });
     }
 
-    await fs.writeFile(endpointPath, JSON.stringify(await EndpointConfig.fromEndpoint(endpoint), null, 4));
+    await fs.writeFile(
+        endpointPath,
+        JSON.stringify(await EndpointConfig.fromEndpoint(endpoint), null, 4)
+    );
 }

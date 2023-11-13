@@ -4,7 +4,6 @@ import Variable from "../variables/Variable";
 import PayloadType from "../model/PayloadType";
 
 export default class PayloadFile implements Payload {
-
     payloadPath: string;
 
     constructor(payloadPath: string) {
@@ -19,14 +18,19 @@ export default class PayloadFile implements Payload {
         return this.payloadPath;
     }
 
-    getRawData(formatted: boolean): Promise<string> {
+    getRawData(): Promise<string> {
         // Pure string => return unformatted
         return this.getData();
     }
 
     async getBody(variableScope: { [key: string]: Variable }): Promise<any> {
         // Resolve variables in payloadPath
-        return fs.readFile(new Variable("payloadPath", (await this.getData())).resolve(variableScope).value, {});
+        return fs.readFile(
+            new Variable("payloadPath", await this.getData()).resolve(
+                variableScope
+            ).value,
+            {}
+        );
     }
 
     toString(): string {

@@ -7,7 +7,6 @@ import LRCConfig from "./LRCConfig";
  * Can be used to manage the config for the rest client.
  */
 export default class ConfigManager {
-
     configFilePath: string;
 
     constructor(configFilePath: string = LRCConstants.DEFAULT_CONFIG_FILE) {
@@ -16,7 +15,7 @@ export default class ConfigManager {
 
     /**
      * Loads the configuration from disk.
-     * 
+     *
      * @returns the config which is stored at the passed path or an empty config
      */
     async loadConfig(): Promise<LRCConfig> {
@@ -29,7 +28,7 @@ export default class ConfigManager {
 
     /**
      * Stores the passed configuration on disk.
-     * 
+     *
      * @param config Config which should be stored
      */
     async storeConfig(config: LRCConfig): Promise<void> {

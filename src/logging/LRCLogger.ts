@@ -1,7 +1,6 @@
-import chalk from 'chalk';
+import chalk from "chalk";
 import Endpoint from "../model/Endpoint";
 import Environment from "../model/Environment";
-import HttpMethod from "../model/HttpMethod";
 import LRCRequest from "../model/LRCRequest";
 import LRCResponse from "../model/LRCResponse";
 import Payload from "../payload/Payload";
@@ -9,7 +8,6 @@ import LRCLoggerConfig from "./LRCLoggerConfig";
 
 const log = console.log;
 export default class LRCLogger {
-
     static instance = new LRCLogger();
 
     loggerConfig: LRCLoggerConfig;
@@ -27,9 +25,11 @@ export default class LRCLogger {
             });
 
             log(chalk.bold("Variables:"));
-            Object.entries(e.variableScope.variableStore).forEach(([key, variable]) => {
-                log(chalk.green(`${key}=${variable.value}`));
-            });
+            Object.entries(e.variableScope.variableStore).forEach(
+                ([key, variable]) => {
+                    log(chalk.green(`${key}=${variable.value}`));
+                }
+            );
 
             this.nl();
         }
@@ -42,7 +42,10 @@ export default class LRCLogger {
             while (normalizedMethod.length < 4) {
                 normalizedMethod = " " + normalizedMethod;
             }
-            log(chalk.bgMagenta.black(normalizedMethod), chalk.blue(e.url.value));
+            log(
+                chalk.bgMagenta.black(normalizedMethod),
+                chalk.blue(e.url.value)
+            );
 
             Object.entries(e.headers).forEach(([key, variable]) => {
                 log(chalk.cyan(`${key}: ${variable.value}`));
@@ -51,7 +54,10 @@ export default class LRCLogger {
         if (this.loggerConfig.logEndpointPayload && e.payload) {
             log(chalk.blue(await e.payload.getRawData(true)));
         }
-        if (this.loggerConfig.logEndpoint || this.loggerConfig.logEndpointPayload && e.payload) {
+        if (
+            this.loggerConfig.logEndpoint ||
+            (this.loggerConfig.logEndpointPayload && e.payload)
+        ) {
             this.nl();
         }
     }
@@ -72,7 +78,10 @@ export default class LRCLogger {
             log(chalk.blue(req.body));
         }
 
-        if (this.loggerConfig.logRequest || this.loggerConfig.logRequestBody && req.body) {
+        if (
+            this.loggerConfig.logRequest ||
+            (this.loggerConfig.logRequestBody && req.body)
+        ) {
             this.nl();
         }
     }
@@ -81,11 +90,15 @@ export default class LRCLogger {
         if (this.loggerConfig.logResponse) {
             log(chalk.bold.underline.white("Response:"));
 
-            const bg = response.status < 300 ? chalk.green :
-                response.status > 400 && response.status < 500 ? chalk.red :
-                    response.status >= 500 ? chalk.magenta :
-                        chalk.white;
-            log(bg.black(response.status), chalk.white( response.statusText));
+            const bg =
+                response.status < 300
+                    ? chalk.green
+                    : response.status > 400 && response.status < 500
+                        ? chalk.red
+                        : response.status >= 500
+                            ? chalk.magenta
+                            : chalk.white;
+            log(bg.black(response.status), chalk.white(response.statusText));
 
             Object.entries(response.headers).forEach(([key, header]) => {
                 log(chalk.yellow(`${key}: ${header}`));
@@ -96,7 +109,7 @@ export default class LRCLogger {
         if (this.loggerConfig.logResponseBody) {
             // Try extracting payload
             try {
-                const payload = await response.extractPayload()
+                const payload = await response.extractPayload();
                 if (payload) {
                     log(chalk.white(await payload?.getRawData(true)));
                     loggedPayload = true;
@@ -104,11 +117,13 @@ export default class LRCLogger {
             } catch (e: any) {
                 this.logError(e.message, e);
             }
-
         }
 
-        if (this.loggerConfig.logResponse || this.loggerConfig.logResponseBody && loggedPayload) {
-            this.nl()
+        if (
+            this.loggerConfig.logResponse ||
+            (this.loggerConfig.logResponseBody && loggedPayload)
+        ) {
+            this.nl();
         }
     }
 
@@ -127,5 +142,4 @@ export default class LRCLogger {
     nl() {
         log();
     }
-
-};
+}
