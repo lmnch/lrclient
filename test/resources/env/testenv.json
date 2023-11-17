@@ -1,4 +1,8 @@
 {
   "headers": {},
-  "variables": {}
+  "variables": {
+    "topLevelDomain": "com",
+    "group": "company_test123",
+    "userAgent": "lrclient"
+  }
 }

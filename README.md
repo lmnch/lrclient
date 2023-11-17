@@ -2,34 +2,34 @@
 
 Json-file-based REST-Client written in Typescript.
 
--   [Usage](#usage)
--   [Definitions](#definitions)
--   [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Definitions](#definitions)
+- [Project Structure](#project-structure)
 
 # Usage
 
 ```javascript
-const lrc = new LRClient()
+const lrc = new LRClient();
 
 // Loads config from disk
-await lrc.init()
+await lrc.init();
 
 // Performs the request specified in ./collections/api/hello-world-service/hello.json
-await lrc.send('./collections/api/hello-world-service/hello.json')
+await lrc.send("./collections/api/hello-world-service/hello.json");
 
 // Executes the upload request and replaces variables in request url, headers or payload body with the entries from the second parameter
-await lrc.send('./collections/api/hello-world-service/load-profile.json', {
-    token: '1234',
-    username: 'bernd',
-})
+await lrc.send("./collections/api/hello-world-service/load-profile.json", {
+  token: "1234",
+  username: "bernd",
+});
 
 // Uploads the file at the passed file path
-const payload = new PayloadFile('./files/example.pdf')
+const payload = new PayloadFile("./files/example.pdf");
 await lrc.send(
-    './collections/api/hello-world-service/upload.json',
-    { token: '1234' },
-    payload
-)
+  "./collections/api/hello-world-service/upload.json",
+  { token: "1234" },
+  payload,
+);
 ```
 
 # Definitions
@@ -53,11 +53,11 @@ Variable values can contain other variables (but please do not create circular d
 
 ```json
 {
-    "variables": {
-        "username": "bernd",
-        "authorization": "{{username}}:{{password}}",
-        "password": "bernd!rocks"
-    }
+  "variables": {
+    "username": "bernd",
+    "authorization": "{{username}}:{{password}}",
+    "password": "bernd!rocks"
+  }
 }
 ```
 
@@ -74,14 +74,14 @@ Variables can be used inside of the value of a header:
 
 ```json
 {
-    "headers": {
-        "Authorization": "{{authorization}}"
-    },
-    "variables": {
-        "username": "bernd",
-        "authorization": "{{username}}:{{password}}",
-        "password": "bernd!rocks"
-    }
+  "headers": {
+    "Authorization": "{{authorization}}"
+  },
+  "variables": {
+    "username": "bernd",
+    "authorization": "{{username}}:{{password}}",
+    "password": "bernd!rocks"
+  }
 }
 ```
 
@@ -91,17 +91,17 @@ A payload can be used by creating a json file of this form:
 
 ```json
 {
-    "payloadType": "application/json",
-    "data": "{\"street\":\"Teststreet\",\"name\": \"{{user}}\"}"
+  "payloadType": "application/json",
+  "data": "{\"street\":\"Teststreet\",\"name\": \"{{user}}\"}"
 }
 ```
 
 Inside of this data field, variables can be resolved.
 Currently, there are three types of payloads supported:
 
--   JSON: `data` contains the whole JSON string
--   Text: `data` contains the whole text
--   Files: `data` contains the path to the file that should be uploaded
+- JSON: `data` contains the whole JSON string
+- Text: `data` contains the whole text
+- Files: `data` contains the path to the file that should be uploaded
 
 The payload which should be used for a request can be defined on two levels (similar to variables):
 
@@ -117,14 +117,14 @@ Such an endpoint is defined as following:
 
 ```json
 {
-    "url": "http://localhost:8080/api/upload",
-    "method": "POST",
-    "headers": {
-        "User-Agent": "Mozilla Firefox"
-    },
-    "variables": {
-        "user": "lmnch"
-    }
+  "url": "http://localhost:8080/api/upload",
+  "method": "POST",
+  "headers": {
+    "User-Agent": "Mozilla Firefox"
+  },
+  "variables": {
+    "user": "lmnch"
+  }
 }
 ```
 
@@ -141,17 +141,17 @@ An environment contains headers and custom variables which are applied to all re
 
 ```json
 {
-    "headers": {
-        "Authorization": "Bearer {{bearerToken}}",
-        "User-Agent": "Mozilla Firefox"
-    },
-    "variables": {
-        "bearerToken": "...",
-        "baseUrl": "http://www.github.com",
-        "user": "lmnch",
-        "repository": "LRClient",
-        "requestUrl": "{{baseUrl}}/{{user}}/{{repository}}"
-    }
+  "headers": {
+    "Authorization": "Bearer {{bearerToken}}",
+    "User-Agent": "Mozilla Firefox"
+  },
+  "variables": {
+    "bearerToken": "...",
+    "baseUrl": "http://www.github.com",
+    "user": "lmnch",
+    "repository": "LRClient",
+    "requestUrl": "{{baseUrl}}/{{user}}/{{repository}}"
+  }
 }
 ```
 
@@ -163,7 +163,9 @@ The logging configuration can be done by passing a LRCLoggerConfig object to the
 There, it can be specified which parts should be logged:
 
 ```javascript
-new LRCLogger(new LRCLoggerConfig({ logEndpoint: true, logResponesBody: true }))
+new LRCLogger(
+  new LRCLoggerConfig({ logEndpoint: true, logResponesBody: true }),
+);
 ```
 
 # Project structure

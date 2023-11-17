@@ -1,8 +1,12 @@
 {
-    "url": "https://www.github.com/{{username}}",
-    "method": "GET",
-    "headers": { },
-    "variables": {
-      "username": "lmnch"
-    }
+  "url": "https://www.github.{{topLevelDomain}}/{{username}}",
+  "method": "GET",
+  "headers": {
+    "Connection": "{{connection}}",
+    "User-Agent": "{{userAgent}}"
+  },
+  "variables": {
+    "username": "lmnch",
+    "connection": "keep-alive"
+  }
 }

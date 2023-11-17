@@ -7,14 +7,14 @@ import {
 } from "./../helpers/fetchmock";
 import { HttpMethod, LRCRequest } from "../../src/index";
 import chaiAsPromised from "chai-as-promised";
-import chai, { assert, expect } from "chai";
+import chai, { expect } from "chai";
 
 chai.use(chaiAsPromised);
 
 describe("GET requests", () => {
     it("should send GET request and receive result 200", () => {
         const url =
-            "https://github.com/search?q=repo%3Almnch%2Flrclient%20test&type=code";
+      "https://github.com/search?q=repo%3Almnch%2Flrclient%20test&type=code";
         const method: HttpMethod = HttpMethod.GET;
         const headers: { [key: string]: string } = {
             Authorization: "Basic abc",
@@ -38,7 +38,7 @@ describe("GET requests", () => {
             expect(target.fetch()).to.be.fulfilled,
             expect(target.fetch()).to.eventually.have.property(
                 "status",
-                responseStatus
+                responseStatus,
             ),
             target
                 .fetch()
@@ -49,7 +49,7 @@ describe("GET requests", () => {
 
     it("should send GET request and receive result 400", () => {
         const url =
-            "https://github.com/search?q=repo%3Almnch%2Flrclient%20test&type=code";
+      "https://github.com/search?q=repo%3Almnch%2Flrclient%20test&type=code";
         const method: HttpMethod = HttpMethod.GET;
         const headers: { [key: string]: string } = {
             Authorization: "Basic abc",
@@ -71,7 +71,7 @@ describe("GET requests", () => {
 
         target.fetch();
         return Promise.all([
-            expect(target.fetch()).to.eventually.be.rejectedWith("400")
+            expect(target.fetch()).to.eventually.be.rejectedWith("400"),
         ]);
     });
 

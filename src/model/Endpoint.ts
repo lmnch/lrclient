@@ -7,25 +7,25 @@ import HttpMethod from "./HttpMethod";
  * Endpoint definition
  */
 export default class Endpoint {
-    url: Variable;
-    method: HttpMethod;
+  url: Variable;
+  method: HttpMethod;
 
-    headers: { [header: string]: Variable };
-    variableScope: VariableManager;
+  headers: { [header: string]: Variable };
+  variableScope: VariableManager;
 
-    payload: ConfiguredPayload | undefined;
+  payload: ConfiguredPayload | undefined;
 
-    constructor(
-        url: Variable,
-        method: HttpMethod,
-        headers: { [header: string]: Variable },
-        variableScope: VariableManager,
-        payload: ConfiguredPayload | undefined
-    ) {
-        this.url = url;
-        this.method = method;
-        this.headers = headers;
-        this.variableScope = variableScope;
-        this.payload = payload;
-    }
+  constructor(
+      url: Variable,
+      method: HttpMethod,
+      headers: { [header: string]: Variable },
+      variableScope: VariableManager,
+      payload: ConfiguredPayload | undefined,
+  ) {
+      this.url = url;
+      this.method = method;
+      this.headers = headers;
+      this.variableScope = variableScope;
+      this.payload = payload;
+  }
 }

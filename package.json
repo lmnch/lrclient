@@ -1,45 +1,46 @@
 {
-    "name": "lrclient",
-    "version": "0.1.14",
-    "description": "JSON file based REST client for developers written in Typescript",
-    "scripts": {
-        "prepublish": "npm run build",
-        "lint": "npx eslint ./src ./test --ext .ts --config .eslintrc.json --fix",
-        "build": "tsc -p tsconfig.json",
-        "test": "mocha test/**/*.test.ts"
-    },
-    "keywords": [
-        "rest-client",
-        "rest"
-    ],
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "author": "lmnch",
-    "license": "GPL-3.0",
-    "homepage": "https://github.com/lmnch/LRClient",
-    "repository": "lmnch/LRClient",
-    "dependencies": {
-        "@types/chai-as-promised": "^7.1.8",
-        "@types/mocha": "^10.0.4",
-        "chai-as-promised": "^7.1.1",
-        "chalk": "4.1.2",
-        "node-fetch": "^3.2.10"
-    },
-    "devDependencies": {
-        "@types/chai": "^4.3.10",
-        "@types/node": "^16.11.68",
-        "@typescript-eslint/eslint-plugin": "^6.10.0",
-        "@typescript-eslint/parser": "^6.10.0",
-        "chai": "^4.3.10",
-        "eslint": "^7.32.0",
-        "mocha": "^9",
-        "shx": "^0.3.3",
-        "ts-node": "^10.9.1",
-        "tslib": "^2.3.1",
-        "typescript": "^4.9.4"
-    },
-    "files": [
-        "dist/"
-    ],
-    "bugs": "https://github.com/lmnch/LRClient/issues"
+  "name": "lrclient",
+  "version": "0.1.14",
+  "description": "JSON file based REST client for developers written in Typescript",
+  "scripts": {
+    "format": "npx prettier . --write",
+    "prepublish": "npm run build",
+    "lint": "npx eslint ./src ./test --ext .ts --config .eslintrc.json --fix",
+    "build": "tsc -p tsconfig.json",
+    "test": "mocha test/**/*.test.ts"
+  },
+  "keywords": [
+    "rest-client",
+    "rest"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "lmnch",
+  "license": "GPL-3.0",
+  "homepage": "https://github.com/lmnch/LRClient",
+  "repository": "lmnch/LRClient",
+  "dependencies": {
+    "@types/chai-as-promised": "^7.1.8",
+    "@types/mocha": "^10.0.4",
+    "chai-as-promised": "^7.1.1",
+    "chalk": "4.1.2",
+    "node-fetch": "^3.2.10"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.10",
+    "@types/node": "^16.11.68",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "chai": "^4.3.10",
+    "eslint": "^7.32.0",
+    "mocha": "^9",
+    "shx": "^0.3.3",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.9.4"
+  },
+  "files": [
+    "dist/"
+  ],
+  "bugs": "https://github.com/lmnch/LRClient/issues"
 }

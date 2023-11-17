@@ -1,0 +1,10 @@
+{
+  "url": "https://www.github.{{topLevelDomain}}/{{username}}/repos",
+  "method": "POST",
+  "headers": {},
+  "payload": "./test/resources/payloads/github/repos/new.json",
+  "variables": {
+    "username": "lmnch",
+    "quality": "cool"
+  }
+}

@@ -7,30 +7,30 @@ import VariableManager from "../variables/VariableManager";
  * Basic env config that can be parsed from json string
  */
 class EnvironmentConfig {
-    headers: { [name: string]: string } = {};
+  headers: { [name: string]: string } = {};
 
-    variables: { [key: string]: string } = {};
+  variables: { [key: string]: string } = {};
 
-    static _mapHeaders(headers: { [name: string]: string }): {
-        [key: string]: Variable
-    } {
-        const mapped: { [key: string]: Variable } = {};
-        for (const key in headers) {
-            if (Object.prototype.hasOwnProperty.call(headers, key)) {
-                const value = headers[key];
+  static _mapHeaders(headers: { [name: string]: string }): {
+    [key: string]: Variable;
+  } {
+      const mapped: { [key: string]: Variable } = {};
+      for (const key in headers) {
+          if (Object.prototype.hasOwnProperty.call(headers, key)) {
+              const value = headers[key];
 
-                mapped[key] = new Variable(key, value);
-            }
-        }
-        return mapped;
-    }
+              mapped[key] = new Variable(key, value);
+          }
+      }
+      return mapped;
+  }
 
-    static toEnvironment(ec: EnvironmentConfig): Environment {
-        return new Environment(
-            EnvironmentConfig._mapHeaders(ec.headers),
-            new VariableManager(ec.variables)
-        );
-    }
+  static toEnvironment(ec: EnvironmentConfig): Environment {
+      return new Environment(
+          EnvironmentConfig._mapHeaders(ec.headers),
+          new VariableManager(ec.variables),
+      );
+  }
 }
 
 /**
@@ -42,6 +42,6 @@ class EnvironmentConfig {
 export async function loadEnvironment(envPath: string): Promise<Environment> {
     const data = await fs.readFile(envPath);
     return EnvironmentConfig.toEnvironment(
-        <EnvironmentConfig>JSON.parse(data.toString())
+    <EnvironmentConfig>JSON.parse(data.toString()),
     );
 }
