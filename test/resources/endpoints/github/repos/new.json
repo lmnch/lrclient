@@ -1,10 +1,15 @@
 {
-  "url": "https://www.github.{{topLevelDomain}}/{{username}}/repos",
-  "method": "POST",
-  "headers": {},
-  "payload": "./test/resources/payloads/github/repos/new.json",
-  "variables": {
-    "username": "lmnch",
-    "quality": "cool"
-  }
+    "url": "https://www.github.{{topLevelDomain}}/{{username}}/repos",
+    "method": "POST",
+    "headers": {},
+    "payload": "./test/resources/payloads/github/repos/new.json",
+    "variables": {
+        "username": "lmnch",
+        "quality": "cool"
+    },
+    "auth": {
+        "authType": "BASIC",
+        "username": "lmnch",
+        "password": "typescript(!)sucks"
+    }
 }

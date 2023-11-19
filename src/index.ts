@@ -26,6 +26,7 @@ import {
     storeEndpoint,
 } from "./config";
 import { Variable, VariableManager } from "./variables";
+import { Auth, AuthMerger, AuthOAuth2, AuthType } from "./auth";
 
 // TODO: package in submodules maybe?
 export {
@@ -53,4 +54,8 @@ export {
     ConfigManager,
     Variable,
     VariableManager,
+    Auth,
+    AuthType,
+    AuthOAuth2,
+    AuthMerger,
 };

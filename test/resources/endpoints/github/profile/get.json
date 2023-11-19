@@ -1,12 +1,12 @@
 {
-  "url": "https://www.github.{{topLevelDomain}}/{{username}}",
-  "method": "GET",
-  "headers": {
-    "Connection": "{{connection}}",
-    "User-Agent": "{{userAgent}}"
-  },
-  "variables": {
-    "username": "lmnch",
-    "connection": "keep-alive"
-  }
+    "url": "https://www.github.{{topLevelDomain}}/{{username}}",
+    "method": "GET",
+    "headers": {
+        "Connection": "{{connection}}",
+        "User-Agent": "{{userAgent}}"
+    },
+    "variables": {
+        "username": "lmnch",
+        "connection": "keep-alive"
+    }
 }

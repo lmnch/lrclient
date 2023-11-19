@@ -19,7 +19,7 @@ describe("Variable replacement in headers", () => {
     beforeEach(() => {
         const capturesKeepAlive = new FetchCallAssertions();
         capturesKeepAlive.resource = new Eq<RequestInfo | URL>(
-            "https://www.github.com/lmnch",
+            "https://www.github.com/lmnch"
         );
         capturesKeepAlive.headerParams = new ContainsAll({
             Connection: "keep-alive",
@@ -27,13 +27,13 @@ describe("Variable replacement in headers", () => {
         });
         const respKeepAlive = new Response(
             JSON.stringify({ username: "lmnch", password: "password" }),
-            { headers: { "Content-Type": "application/json" } },
+            { headers: { "Content-Type": "application/json" } }
         );
         mockKeepAlive = mock(capturesKeepAlive, respKeepAlive);
 
         const capturesClose = new FetchCallAssertions();
         capturesClose.resource = new Eq<RequestInfo | URL>(
-            "https://www.github.com/lmnch",
+            "https://www.github.com/lmnch"
         );
         capturesClose.headerParams = new ContainsAll({
             Connection: "close",
@@ -46,7 +46,7 @@ describe("Variable replacement in headers", () => {
 
         const capturesFirefox = new FetchCallAssertions();
         capturesFirefox.resource = new Eq<RequestInfo | URL>(
-            "https://www.github.com/lmnch",
+            "https://www.github.com/lmnch"
         );
         capturesFirefox.headerParams = new ContainsAll({
             Connection: "close",
@@ -61,7 +61,7 @@ describe("Variable replacement in headers", () => {
     it("should use variable from endpoint", async () => {
         const target = new LRClient(
             new LRCLoggerConfig({}),
-            new ConfigManager(testConfig),
+            new ConfigManager(testConfig)
         );
         await target.init();
 
@@ -75,14 +75,17 @@ describe("Variable replacement in headers", () => {
     it("should overwrite variable from endpoint with new value", async () => {
         const target = new LRClient(
             new LRCLoggerConfig({}),
-            new ConfigManager(testConfig),
+            new ConfigManager(testConfig)
         );
         await target.init();
 
         // Overwrite varaiable value
-        await target.send("./test/resources/endpoints/github/profile/get.json", {
-            connection: "close",
-        });
+        await target.send(
+            "./test/resources/endpoints/github/profile/get.json",
+            {
+                connection: "close",
+            }
+        );
 
         expect(mockKeepAlive.counter).to.eq(0);
         expect(mockClose.counter).to.eq(1);
@@ -92,15 +95,18 @@ describe("Variable replacement in headers", () => {
     it("should overwrite environment variable", async () => {
         const target = new LRClient(
             new LRCLoggerConfig({}),
-            new ConfigManager(testConfig),
+            new ConfigManager(testConfig)
         );
         await target.init();
 
         // Overwrite varaiable value
-        await target.send("./test/resources/endpoints/github/profile/get.json", {
-            userAgent: "Firefox",
-            connection: "close",
-        });
+        await target.send(
+            "./test/resources/endpoints/github/profile/get.json",
+            {
+                userAgent: "Firefox",
+                connection: "close",
+            }
+        );
 
         expect(mockKeepAlive.counter).to.eq(0);
         expect(mockClose.counter).to.eq(0);

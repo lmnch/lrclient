@@ -8,20 +8,20 @@ import VariableManager from "./VariableManager";
  */
 export default class VariableMerger {
     /**
-   * Merges variables tother:
-   * - localVariables overwrite
-   * - endpoint variables overwrite
-   * - environment variables
-   *
-   * @param localVariables
-   * @param endpoint
-   * @param environment
-   * @returns
-   */
+     * Merges variables tother:
+     * - localVariables overwrite
+     * - endpoint variables overwrite
+     * - environment variables
+     *
+     * @param localVariables
+     * @param endpoint
+     * @param environment
+     * @returns
+     */
     static mergeVariables(
         localVariables: { [key: string]: string } = {},
         endpoint: Endpoint,
-        environment: Environment,
+        environment: Environment
     ): VariableManager {
         const merged: { [key: string]: string } = {};
 
@@ -29,7 +29,7 @@ export default class VariableMerger {
             if (
                 Object.prototype.hasOwnProperty.call(
                     environment.variableScope.variableStore,
-                    key,
+                    key
                 )
             ) {
                 const variable = environment.variableScope.variableStore[key];
@@ -43,7 +43,7 @@ export default class VariableMerger {
             if (
                 Object.prototype.hasOwnProperty.call(
                     endpoint.variableScope.variableStore,
-                    key,
+                    key
                 )
             ) {
                 const variable = endpoint.variableScope.variableStore[key];
@@ -64,22 +64,24 @@ export default class VariableMerger {
     }
 
     /**
-   * Merges headers together:
-   * - endpoint headers overwrite
-   * - environment headers
-   *
-   * @param endpoint
-   * @param environment
-   * @returns
-   */
+     * Merges headers together:
+     * - endpoint headers overwrite
+     * - environment headers
+     *
+     * @param endpoint
+     * @param environment
+     * @returns
+     */
     static mergeHeaders(
         endpoint: Endpoint,
-        environment: Environment,
+        environment: Environment
     ): { [key: string]: Variable } {
         const merged: { [key: string]: Variable } = {};
 
         for (const key in environment.headers) {
-            if (Object.prototype.hasOwnProperty.call(environment.headers, key)) {
+            if (
+                Object.prototype.hasOwnProperty.call(environment.headers, key)
+            ) {
                 const variable = environment.headers[key];
 
                 merged[key] = variable;
