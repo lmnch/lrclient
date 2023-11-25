@@ -18,30 +18,30 @@ describe("Variable replacement in URLs", () => {
     beforeEach(() => {
         const capturesLmnch = new FetchCallAssertions();
         capturesLmnch.resource = new Eq<RequestInfo | URL>(
-            "https://www.github.com/lmnch",
+            "https://www.github.com/lmnch"
         );
         const respLmnch = new Response(
             JSON.stringify({ username: "lmnch", password: "password" }),
-            { headers: { "Content-Type": "application/json" } },
+            { headers: { "Content-Type": "application/json" } }
         );
         mockLmnch = mock(capturesLmnch, respLmnch);
 
         const capturesLukas = new FetchCallAssertions();
         capturesLukas.resource = new Eq<RequestInfo | URL>(
-            "https://www.github.com/xXx_LUKAS_D3STR0Y3R_xXx",
+            "https://www.github.com/xXx_LUKAS_D3STR0Y3R_xXx"
         );
         const respLukas = new Response(
             JSON.stringify({
                 username: "xXx_LUKAS_D3STR0Y3R_xXx",
                 password: "bigdenergy",
             }),
-            { headers: { "Content-Type": "application/json" } },
+            { headers: { "Content-Type": "application/json" } }
         );
         mockLukas = mock(capturesLukas, respLukas);
 
         const capturesDotDev = new FetchCallAssertions();
         capturesDotDev.resource = new Eq<RequestInfo | URL>(
-            "https://www.github.dev/lmnch",
+            "https://www.github.dev/lmnch"
         );
         const respDotDev = new Response(JSON.stringify({ dev: true }), {
             headers: { "Content-Type": "application/json" },
@@ -52,12 +52,12 @@ describe("Variable replacement in URLs", () => {
     it("should use variable from endpoint", async () => {
         const target = new LRClient(
             new LRCLoggerConfig({}),
-            new ConfigManager(testConfig),
+            new ConfigManager(testConfig)
         );
         await target.init();
 
         const response: any = await target.send(
-            "./test/resources/endpoints/github/profile/get.json",
+            "./test/resources/endpoints/github/profile/get.json"
         );
 
         expect(response).to.haveOwnProperty("username", "lmnch");
@@ -71,17 +71,20 @@ describe("Variable replacement in URLs", () => {
     it("should overwrite variable from endpoint with new value", async () => {
         const target = new LRClient(
             new LRCLoggerConfig({}),
-            new ConfigManager(testConfig),
+            new ConfigManager(testConfig)
         );
         await target.init();
 
         // Overwrite varaiable value
         const response: any = await target.send(
             "./test/resources/endpoints/github/profile/get.json",
-            { username: "xXx_LUKAS_D3STR0Y3R_xXx" },
+            { username: "xXx_LUKAS_D3STR0Y3R_xXx" }
         );
 
-        expect(response).to.haveOwnProperty("username", "xXx_LUKAS_D3STR0Y3R_xXx");
+        expect(response).to.haveOwnProperty(
+            "username",
+            "xXx_LUKAS_D3STR0Y3R_xXx"
+        );
         expect(response).to.haveOwnProperty("password", "bigdenergy");
 
         expect(mockLmnch.counter).to.eq(0);
@@ -92,14 +95,14 @@ describe("Variable replacement in URLs", () => {
     it("should overwrite environment variable", async () => {
         const target = new LRClient(
             new LRCLoggerConfig({}),
-            new ConfigManager(testConfig),
+            new ConfigManager(testConfig)
         );
         await target.init();
 
         // Overwrite varaiable value
         const response: any = await target.send(
             "./test/resources/endpoints/github/profile/get.json",
-            { topLevelDomain: "dev" },
+            { topLevelDomain: "dev" }
         );
 
         expect(response).to.haveOwnProperty("dev", true);

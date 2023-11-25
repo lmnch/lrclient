@@ -29,10 +29,10 @@ class FilePayloadExtractor extends PayloadExtractor {
     canHandle(contentType: string | null): boolean {
         return (
             contentType != null &&
-      [
-          PayloadType.APPLICATION_OCTET_STREAM.toString(),
-          PayloadType.APPLICATION_PDF.toString(),
-      ].includes(contentType)
+            [
+                PayloadType.APPLICATION_OCTET_STREAM.toString(),
+                PayloadType.APPLICATION_PDF.toString(),
+            ].includes(contentType)
         );
     }
     async extractResult(response: Response): Promise<PayloadFile> {

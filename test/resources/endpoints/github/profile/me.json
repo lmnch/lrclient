@@ -1,0 +1,12 @@
+{
+    "url": "https://www.github.{{topLevelDomain}}/me",
+    "method": "GET",
+    "variables": {
+        "username": "lmnch",
+        "password": "{{username}}@123"
+    },
+    "auth": {
+        "authType": "BASIC",
+        "password": "{{password}}"
+    }
+}

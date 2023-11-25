@@ -20,58 +20,61 @@ describe("Variable replacement in JSON payloads", () => {
     beforeEach(() => {
         const capturesCool = new FetchCallAssertions();
         capturesCool.resource = new Eq<RequestInfo | URL>(
-            "https://www.github.com/lmnch/repos",
+            "https://www.github.com/lmnch/repos"
         );
         capturesCool.method = new Eq("POST");
         capturesCool.payloadParams = new And(
             new StringContains("cool"),
-            new StringContains("company_test123"),
+            new StringContains("company_test123")
         );
         const respCool = new Response(
             JSON.stringify({ repoName: "lrclient", sucessful: true }),
-            { headers: { "Content-Type": "application/json" } },
+            { headers: { "Content-Type": "application/json" } }
         );
         mockCool = mock(capturesCool, respCool);
 
         const capturesDump = new FetchCallAssertions();
         capturesDump.resource = new Eq<RequestInfo | URL>(
-            "https://www.github.com/lmnch/repos",
+            "https://www.github.com/lmnch/repos"
         );
         capturesDump.method = new Eq("POST");
         capturesDump.payloadParams = new And(
             new StringContains("dump"),
-            new StringContains("company_test123"),
+            new StringContains("company_test123")
         );
         const respDump = new Response(
             JSON.stringify({ repoName: "lrclient", sucessful: false }),
-            { headers: { "Content-Type": "application/json" } },
+            { headers: { "Content-Type": "application/json" } }
         );
         mockDump = mock(capturesDump, respDump);
 
         const capturesCompanyOverwrite = new FetchCallAssertions();
         capturesCompanyOverwrite.resource = new Eq<RequestInfo | URL>(
-            "https://www.github.com/lmnch/repos",
+            "https://www.github.com/lmnch/repos"
         );
         capturesCompanyOverwrite.method = new Eq("POST");
         capturesCompanyOverwrite.payloadParams = new StringContains(
-            "company_test_4444",
+            "company_test_4444"
         );
         const respCompanyOverwrite = new Response(
             JSON.stringify({ repoName: "lrclient", sucessful: true }),
-            { headers: { "Content-Type": "application/json" } },
+            { headers: { "Content-Type": "application/json" } }
         );
-        mockCompanyOverwrite = mock(capturesCompanyOverwrite, respCompanyOverwrite);
+        mockCompanyOverwrite = mock(
+            capturesCompanyOverwrite,
+            respCompanyOverwrite
+        );
     });
 
     it("should use endpoint variable in payload", async () => {
         const target = new LRClient(
             new LRCLoggerConfig({}),
-            new ConfigManager(testConfig),
+            new ConfigManager(testConfig)
         );
         await target.init();
 
         const response: any = await target.send(
-            "./test/resources/endpoints/github/repos/new.json",
+            "./test/resources/endpoints/github/repos/new.json"
         );
 
         expect(response).to.haveOwnProperty("sucessful", true);
@@ -84,13 +87,13 @@ describe("Variable replacement in JSON payloads", () => {
     it("should overwrite endpoint variable in payload", async () => {
         const target = new LRClient(
             new LRCLoggerConfig({}),
-            new ConfigManager(testConfig),
+            new ConfigManager(testConfig)
         );
         await target.init();
 
         const response: any = await target.send(
             "./test/resources/endpoints/github/repos/new.json",
-            { quality: "dump" },
+            { quality: "dump" }
         );
 
         // We expect passed var quality=dump to be used
@@ -105,7 +108,7 @@ describe("Variable replacement in JSON payloads", () => {
     it("should overwrite environment variable in payload", async () => {
         const target = new LRClient(
             new LRCLoggerConfig({}),
-            new ConfigManager(testConfig),
+            new ConfigManager(testConfig)
         );
         await target.init();
 

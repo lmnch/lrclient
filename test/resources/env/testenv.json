@@ -1,8 +1,13 @@
 {
-  "headers": {},
-  "variables": {
-    "topLevelDomain": "com",
-    "group": "company_test123",
-    "userAgent": "lrclient"
-  }
+    "headers": {},
+    "variables": {
+        "topLevelDomain": "com",
+        "group": "company_test123",
+        "userAgent": "lrclient"
+    },
+    "auth": {
+        "authType": "BASIC",
+        "username": "{{username}}",
+        "password": "test123"
+    }
 }

@@ -5,62 +5,73 @@ import Variable from "../variables/Variable";
 import VariableManager from "../variables/VariableManager";
 import { loadPayload } from "./PayloadLoader";
 import { sep } from "path";
+import Auth from "../auth/Auth";
+import { AuthConfig } from "./AuthLoader";
 
 class EndpointConfig {
-  url: string = "";
-  method: keyof typeof HttpMethod = "GET";
+    url: string = "";
+    method: keyof typeof HttpMethod = "GET";
 
-  headers: { [name: string]: string } = {};
-  variables: { [key: string]: string } = {};
+    headers: { [name: string]: string } = {};
+    variables: { [key: string]: string } = {};
+    auth: AuthConfig | undefined;
 
-  payload: string | undefined;
+    payload: string | undefined;
 
-  static _mapHeaders(headers: { [name: string]: string }): {
-    [key: string]: Variable;
-  } {
-      const mapped: { [key: string]: Variable } = {};
-      for (const key in headers) {
-          if (Object.prototype.hasOwnProperty.call(headers, key)) {
-              const value = headers[key];
+    static _mapHeaders(headers: { [name: string]: string }): {
+        [key: string]: Variable;
+    } {
+        const mapped: { [key: string]: Variable } = {};
+        for (const key in headers) {
+            if (Object.prototype.hasOwnProperty.call(headers, key)) {
+                const value = headers[key];
 
-              mapped[key] = new Variable(key, value);
-          }
-      }
-      return mapped;
-  }
+                mapped[key] = new Variable(key, value);
+            }
+        }
+        return mapped;
+    }
 
-  static async toEndpoint(ec: EndpointConfig): Promise<Endpoint> {
-      const method = ec.method ? HttpMethod[ec.method] : HttpMethod.GET;
-      let payload = undefined;
-      if (ec.payload) {
-          payload = await loadPayload(ec.payload);
-      }
-      return new Endpoint(
-          new Variable("url", ec.url),
-          method,
-          EndpointConfig._mapHeaders(ec.headers),
-          new VariableManager(ec.variables),
-          payload,
-      );
-  }
+    static async toEndpoint(ec: EndpointConfig): Promise<Endpoint> {
+        const method = ec.method ? HttpMethod[ec.method] : HttpMethod.GET;
+        let payload = undefined;
+        if (ec.payload) {
+            payload = await loadPayload(ec.payload);
+        }
+        let auth: Auth | undefined = undefined;
+        if (ec.auth) {
+            auth = AuthConfig.toAuth(ec.auth);
+        }
+        return new Endpoint(
+            new Variable("url", ec.url),
+            method,
+            EndpointConfig._mapHeaders(ec.headers),
+            new VariableManager(ec.variables),
+            auth,
+            payload
+        );
+    }
 
-  static async fromEndpoint(e: Endpoint): Promise<EndpointConfig> {
-      const ec = new EndpointConfig();
-      ec.url = e.url.value;
-      ec.method = e.method;
-      ec.headers = {};
-      Object.entries(e.headers).forEach((e) => {
-          const [key, variable] = e;
-          ec.headers[key] = variable.value;
-      });
-      ec.variables = {};
-      Object.entries(e.variableScope.variableStore).forEach((e) => {
-          const [key, variable] = e;
-          ec.variables[key] = variable.value;
-      });
-      ec.payload = e.payload?.getConfigPath();
-      return ec;
-  }
+    static async fromEndpoint(e: Endpoint): Promise<EndpointConfig> {
+        const ec = new EndpointConfig();
+        ec.url = e.url.value;
+        ec.method = e.method;
+        ec.headers = {};
+        Object.entries(e.headers).forEach((e) => {
+            const [key, variable] = e;
+            ec.headers[key] = variable.value;
+        });
+        ec.variables = {};
+        Object.entries(e.variableScope.variableStore).forEach((e) => {
+            const [key, variable] = e;
+            ec.variables[key] = variable.value;
+        });
+        if (e.auth) {
+            ec.auth = AuthConfig.fromAuth(e.auth);
+        }
+        ec.payload = e.payload?.getConfigPath();
+        return ec;
+    }
 }
 
 /**
@@ -71,14 +82,16 @@ class EndpointConfig {
  */
 export async function loadEndpoint(endpointPath: string): Promise<Endpoint> {
     const data = await fs.readFile(endpointPath);
-    return EndpointConfig.toEndpoint(<EndpointConfig>JSON.parse(data.toString()));
+    return EndpointConfig.toEndpoint(
+        <EndpointConfig>JSON.parse(data.toString())
+    );
 }
 
 export async function storeEndpoint(endpointPath: string, endpoint: Endpoint) {
     const pathParts = endpointPath.split(sep);
 
     if (pathParts.length > 1) {
-    // Try to create missing directories
+        // Try to create missing directories
         await fs.mkdir(pathParts.slice(0, pathParts.length - 1).join(sep), {
             recursive: true,
         });
@@ -86,6 +99,6 @@ export async function storeEndpoint(endpointPath: string, endpoint: Endpoint) {
 
     await fs.writeFile(
         endpointPath,
-        JSON.stringify(await EndpointConfig.fromEndpoint(endpoint), null, 4),
+        JSON.stringify(await EndpointConfig.fromEndpoint(endpoint), null, 4)
     );
 }

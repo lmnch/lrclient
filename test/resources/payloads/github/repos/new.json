@@ -1,4 +1,4 @@
 {
-  "payloadType": "application/json",
-  "data": "{\"repoName\": \"lrclient\", \"initReadme\":true, \"description\": \"A super {{quality}} project.\",\"group\": \"{{group}}\"}"
+    "payloadType": "application/json",
+    "data": "{\"repoName\": \"lrclient\", \"initReadme\":true, \"description\": \"A super {{quality}} project.\",\"group\": \"{{group}}\"}"
 }

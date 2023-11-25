@@ -4,39 +4,40 @@ import Variable from "../variables/Variable";
 import PayloadType from "../model/PayloadType";
 
 export default class PayloadFile implements Payload {
-  payloadPath: string;
+    payloadPath: string;
 
-  constructor(payloadPath: string) {
-      this.payloadPath = payloadPath;
-  }
+    constructor(payloadPath: string) {
+        this.payloadPath = payloadPath;
+    }
 
-  setRawData(rawData: string): void {
-      this.payloadPath = rawData;
-  }
+    setRawData(rawData: string): void {
+        this.payloadPath = rawData;
+    }
 
-  async getData(): Promise<string> {
-      return this.payloadPath;
-  }
+    async getData(): Promise<string> {
+        return this.payloadPath;
+    }
 
-  getRawData(): Promise<string> {
-      // Pure string => return unformatted
-      return this.getData();
-  }
+    getRawData(): Promise<string> {
+        // Pure string => return unformatted
+        return this.getData();
+    }
 
-  async getBody(variableScope: { [key: string]: Variable }): Promise<any> {
-      // Resolve variables in payloadPath
-      return fs.readFile(
-          new Variable("payloadPath", await this.getData()).resolve(variableScope)
-              .value,
-          {},
-      );
-  }
+    async getBody(variableScope: { [key: string]: Variable }): Promise<any> {
+        // Resolve variables in payloadPath
+        return fs.readFile(
+            new Variable("payloadPath", await this.getData()).resolve(
+                variableScope
+            ).value,
+            {}
+        );
+    }
 
-  toString(): string {
-      return `[FILE] ${this.payloadPath}`;
-  }
+    toString(): string {
+        return `[FILE] ${this.payloadPath}`;
+    }
 
-  getContentTypeHeader(): PayloadType {
-      return PayloadType.APPLICATION_OCTET_STREAM;
-  }
+    getContentTypeHeader(): PayloadType {
+        return PayloadType.APPLICATION_OCTET_STREAM;
+    }
 }
