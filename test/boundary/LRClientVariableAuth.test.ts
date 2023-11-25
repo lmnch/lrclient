@@ -2,7 +2,6 @@ import { expect } from "chai";
 import { ConfigManager, LRCLoggerConfig, LRClient } from "../../src";
 import {
     Contains,
-    Eq,
     FetchCallAssertions,
     Mock,
     clearMocks,
@@ -18,7 +17,7 @@ describe("Variable replacement in authorization", () => {
 
     beforeEach(() => {
         const capturesLmnch = new FetchCallAssertions();
-        const authLmnch = btoa(`lmnch:lmnch@123`);
+        const authLmnch = btoa("lmnch:lmnch@123");
         capturesLmnch.headerParams = new Contains(
             "Authorization",
             `Basic ${authLmnch}`

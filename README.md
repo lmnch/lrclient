@@ -110,6 +110,124 @@ The payload which should be used for a request can be defined on two levels (sim
 
 The payload can be selected by refering it in the send command call [`lrc send ENDPOINT`](#lrc-send-endpoint).
 
+## Authorization
+
+The same hierarchy like for headers apply for Authorizations:
+
+1. Endpoint auth
+2. Environment auth
+
+But additionally, authorizations with higher priority can extend lower authorizations.
+This means, you can e.g. define the urls, clientId and secret for OAuth2 on environment level and the username and password endpoint specific.
+If the `authType` of two levels differs, the one with higher priority is used without taking over any values from the other one.
+
+Inside the fields of the auth, variables can be used like in payloads or urls.
+
+There are different types of authorizations supported:
+
+### AuthType: Basic Auth
+
+For basic auth, the client just encodes a combination of username and password (separated with ':') base64 and sends it in the `Authorization` header.
+The configuration for a Basic Auth should look like that:
+
+```json
+{
+    ...
+    "auth": {
+        "authType": "BASIC",
+        "username": "lukas",
+        "password": "{{secretPassword}}"
+    }
+}
+```
+
+Assuming the variable `secretPassword=test`, this authorization configuration will add the following header to the request:
+
+```
+Authorization: Basic bHVrYXM6dGVzdA==
+```
+
+The resulting header overwrites potential already existing `Authorization` headers.
+
+### AuthType: OAuth2
+
+Besides Basic Auth, also OAuth2 is supported.
+Therefore the library [simple-oauth2](https://www.npmjs.com/package/simple-oauth2) is used.
+The configuration of this type should look like that:
+
+```json
+{
+    ...
+    {
+        "authType": "OAUTH2",
+        "clientId": "github",
+        "clientSecret": "0000-1111-3333-4444-5555-6666",
+        "tokenHost": "{{url}}/authorization",
+        "tokenPath": "/token",
+        "revokePath": "/revoke",
+        "scopes": [ "repos" ],
+        "username": "lmnch",
+        "password": "test123"
+    }
+}
+```
+
+### Authorization Merging
+
+Assuming we have an environment authorization like that:
+
+```json
+{
+    ...
+    {
+        "authType": "OAUTH2",
+        "clientId": "github",
+        "clientSecret": "0000-1111-3333-4444-5555-6666",
+        "tokenHost": "{{url}}/authorization",
+        "tokenPath": "/token",
+        "revokePath": "/revoke",
+        "scopes": [ "repos" ],
+        "username": "git"
+    }
+}
+```
+
+And an endpoint authorization like that:
+
+```json
+{
+    ...
+    {
+        "authType": "OAUTH2",
+        "username": "lmnch",
+        "password": "test@123"
+    }
+}
+```
+
+As both have the same authentication type, they can be merged together to the following:
+
+```json
+{
+    ...
+    {
+        "authType": "OAUTH2",
+        "clientId": "github",
+        "clientSecret": "0000-1111-3333-4444-5555-6666",
+        "tokenHost": "{{url}}/authorization",
+        "tokenPath": "/token",
+        "revokePath": "/revoke",
+        "scopes": [ "repos" ],
+        "username": "lmnch",
+        "password": "test@123"
+
+    }
+}
+```
+
+Fields that appear in both (`username`) are overwritten and fields that appear only in one of them (environemnt: `clientId`, `clientSecret`,
+`tokenHost`, `tokenPath`, `revokePath`, `scopes`; endpoint: `password`) are taken over.
+
 ## Endpoint
 
 The job of a REST-Client is obvoiusly to call REST-Endpoints.

@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { loadEndpoint, AuthOAuth2, AuthType } from "../../src";
+import { loadEndpoint, AuthType } from "../../src";
 
 describe("OAuth2 Endpoint loading", () => {
     it("should load OAuth2 authentication correctly", async () => {
