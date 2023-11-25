@@ -1,28 +1,21 @@
 import { expect } from "chai";
-import { loadEndpoint, AuthType } from "../../src";
+import { loadEndpoint, AuthType, AuthOAuth2 } from "../../src";
+import AuthBasic from "../../src/auth/AuthBasic";
 
 describe("OAuth2 Endpoint loading", () => {
     it("should load OAuth2 authentication correctly", async () => {
         const endpoint = await loadEndpoint(
-            "./test/resources/endpoints/github/profile/get.json"
+            "./test/resources/endpoints/github/groups/all.json"
         );
 
         expect(endpoint).to.haveOwnProperty("auth");
         expect(endpoint.auth?.getAuthType()).to.eq(AuthType.OAUTH2);
-        expect(endpoint.auth).to.haveOwnProperty("clientId", "github");
-        expect(endpoint.auth).to.haveOwnProperty(
-            "accessTokenUri",
-            "https://auth.github.com/token"
+        expect((endpoint.auth as AuthOAuth2).clientId).to.eq("github");
+        expect((endpoint.auth as AuthOAuth2).tokenHost).to.eq(
+            "https://auth.github.com"
         );
-        expect(endpoint.auth).to.haveOwnProperty(
-            "authorizationUri",
-            "https://auth.github.com/auth"
-        );
-        expect(endpoint.auth).to.haveOwnProperty(
-            "redirectUri",
-            "https://www.github.{{topLevelDomain}}/{{username}}"
-        );
-        expect(endpoint.auth).to.haveOwnProperty("scopes").and.to.be.empty;
+        expect((endpoint.auth as AuthOAuth2).tokenPath).to.eq("token");
+        expect((endpoint.auth as AuthOAuth2).scopes).to.be.empty;
     });
 });
 
@@ -34,9 +27,8 @@ describe("BasicAuth Endpoint loading", () => {
 
         expect(endpoint).to.haveOwnProperty("auth");
         expect(endpoint.auth?.getAuthType()).to.eq(AuthType.BASIC);
-        expect(endpoint.auth).to.haveOwnProperty("username", "lmnch");
-        expect(endpoint.auth).to.haveOwnProperty(
-            "password",
+        expect((endpoint.auth as AuthBasic).username).to.eq("lmnch");
+        expect((endpoint.auth as AuthBasic).password).to.eq(
             "typescript(!)sucks"
         );
     });

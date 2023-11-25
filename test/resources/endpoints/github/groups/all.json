@@ -1,0 +1,11 @@
+{
+    "url": "https://www.github.{{topLevelDomain}}/groups",
+    "method": "GET",
+    "auth": {
+        "authType": "OAUTH2",
+        "clientId": "github",
+        "tokenHost": "https://auth.github.com",
+        "tokenPath": "token",
+        "scopes": []
+    }
+}
