@@ -75,7 +75,7 @@ Variables can be used inside of the value of a header:
 ```json
 {
     "headers": {
-        "Authorization": "{{authorization}}"
+        "User-Agent": "{{browser}}"
     },
     "variables": {
         "username": "bernd",
@@ -260,7 +260,6 @@ An environment contains headers and custom variables which are applied to all re
 ```json
 {
     "headers": {
-        "Authorization": "Bearer {{bearerToken}}",
         "User-Agent": "Mozilla Firefox"
     },
     "variables": {
@@ -272,8 +271,6 @@ An environment contains headers and custom variables which are applied to all re
     }
 }
 ```
-
-Currently, the environment has to be defined directly in a JSON file.
 
 # Logging
 
